@@ -13,7 +13,7 @@ export default class EspecialidadesControlador {
             if (especialidades.length === 0) {
                 return res.status(404).json({
                     estado: false,
-                    msg: "No se encontraron especialidades."
+                    mensaje: "No se encontraron especialidades."
                 });
             }
 
@@ -27,7 +27,7 @@ export default class EspecialidadesControlador {
 
             res.status(500).json({
                 estado: false,
-                msg: "Error interno."
+                mensaje: "Error interno."
             });
         }
     }
@@ -43,7 +43,7 @@ export default class EspecialidadesControlador {
             if (!especialidad) {
                 return res.status(404).json({
                     estado: false,
-                    msg: "Especialidad no encontrada."
+                    mensaje: "Especialidad no encontrada."
                 });
             }
 
@@ -57,7 +57,7 @@ export default class EspecialidadesControlador {
 
             res.status(500).json({
                 estado: false,
-                msg: "Error interno."
+                mensaje: "Error interno."
             });
         }
     }
@@ -67,11 +67,17 @@ export default class EspecialidadesControlador {
         try {
             const { nombre } = req.body;
 
-            const idCreado = await this.especialidades.crear(nombre);
+            // Crear objeto especialidad
+            const especialidad = {
+                nombre: nombre
+            };
+
+            const nuevaEspecialidad = await this.especialidades.crear(especialidad);
 
             res.status(201).json({
                 estado: true,
-                msg: `Especialidad creada correctamente (ID: ${idCreado}).`
+                mensaje: "Especialidad creada correctamente.",
+                especialidad: nuevaEspecialidad
             });
 
         } catch (error) {
@@ -80,13 +86,13 @@ export default class EspecialidadesControlador {
             if (error.code === "ER_DUP_ENTRY") {
                 return res.status(409).json({
                     estado: false,
-                    msg: "Ya existe una especialidad con ese nombre."
+                    mensaje: "Ya existe una especialidad con ese nombre."
                 });
             }
 
             res.status(500).json({
                 estado: false,
-                msg: "Error interno."
+                mensaje: "Error interno."
             });
         }
     }
@@ -97,21 +103,27 @@ export default class EspecialidadesControlador {
             const id_especialidad = req.params.id_especialidad;
             const { nombre } = req.body;
 
-            // Verifica si la especialidad existe
-            const especialidad = await this.especialidades.buscarPorId(id_especialidad);
+            // Crear objeto especialidad
+            const especialidad = {
+                nombre: nombre
+            };
 
-            if (!especialidad) {
+            const especialidadModificada = await this.especialidades.modificar(
+                id_especialidad,
+                especialidad
+            );
+
+            if (!especialidadModificada) {
                 return res.status(404).json({
                     estado: false,
-                    msg: "Especialidad no encontrada."
+                    mensaje: "Especialidad no encontrada."
                 });
             }
 
-            await this.especialidades.modificar(id_especialidad, nombre);
-
             res.status(200).json({
                 estado: true,
-                msg: "Especialidad modificada."
+                mensaje: "Especialidad modificada.",
+                especialidad: especialidadModificada
             });
 
         } catch (error) {
@@ -120,37 +132,44 @@ export default class EspecialidadesControlador {
             if (error.code === "ER_DUP_ENTRY") {
                 return res.status(409).json({
                     estado: false,
-                    msg: "Ya existe una especialidad con ese nombre."
+                    mensaje: "Ya existe una especialidad con ese nombre."
                 });
             }
 
             res.status(500).json({
                 estado: false,
-                msg: "Error interno."
+                mensaje: "Error interno."
             });
         }
     }
 
-    // Baja lógica de especialidad
-    borrar = async (req, res) => {
+    // Eliminar una especialidad (baja lógica)
+    eliminar = async (req, res) => {
         try {
             const id_especialidad = req.params.id_especialidad;
 
-            // Verifica si la especialidad existe
+            // Buscar especialidad en la base de datos
             const especialidad = await this.especialidades.buscarPorId(id_especialidad);
 
+            // Verifica si la especialidad existe
             if (!especialidad) {
                 return res.status(404).json({
                     estado: false,
-                    msg: "Especialidad no encontrada."
+                    mensaje: "Especialidad no encontrada."
                 });
             }
 
-            await this.especialidades.borrar(id_especialidad);
+            // Eliminar especialidad de la base de datos
+            await this.especialidades.eliminar(id_especialidad);
 
-            res.status(200).json({
+            // Devuelve mensaje indicando que la especialidad fue eliminada
+            return res.status(200).json({
                 estado: true,
-                msg: "Especialidad eliminada."
+                mensaje: "Especialidad eliminada.",
+                especialidad: {
+                    id_especialidad: especialidad[0].id_especialidad,
+                    especialidad: especialidad[0].nombre
+                }
             });
 
         } catch (error) {
@@ -158,7 +177,7 @@ export default class EspecialidadesControlador {
 
             res.status(500).json({
                 estado: false,
-                msg: "Error interno."
+                mensaje: "Error interno."
             });
         }
     }

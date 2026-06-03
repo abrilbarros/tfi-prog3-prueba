@@ -1,16 +1,15 @@
 import { pool } from "./conexion.js";
 
 export default class Especialidades {
+
     buscarTodas = async () => {
         const sql = "SELECT * FROM especialidades WHERE activo = 1";
-
-        const [especialidades] = await pool.execute(sql);
-
+        const [especialidades] = await pool.query(sql);
         return especialidades;
     }
 
     buscarPorId = async (id_especialidad) => {
-        const sql = "SELECT * FROM especialidades WHERE activo = 1 AND id_especialidad = ?";
+        const sql = `SELECT * FROM especialidades WHERE activo = 1 AND id_especialidad = ?`;
 
         const [especialidades] = await pool.execute(sql, [id_especialidad]);
 
@@ -21,28 +20,35 @@ export default class Especialidades {
         return especialidades[0];
     }
 
-    crear = async (nombre) => {
-        const sql = "INSERT INTO especialidades (nombre) VALUES (?)";
+    crear = async (especialidad) => {
+        const { nombre } = especialidad;
+        const sql = 'INSERT INTO especialidades (nombre) VALUES (?)';
+        const [result] = await pool.execute(sql, [nombre]);
 
-        const [resultado] = await pool.execute(sql, [nombre]);
+        if (result.affectedRows === 0) {
+            return null;
+        }
 
-        return resultado.insertId;
+        return result.insertId;
     }
 
-    modificar = async (id_especialidad, nombre) => {
-        const sql = "UPDATE especialidades SET nombre = ? WHERE id_especialidad = ?";
+    modificar = async (id_especialidad, especialidad) => {
+        const { nombre } = especialidad;
+        const sql = 'UPDATE especialidades SET nombre = ? WHERE id_especialidad = ?';
+        const [result] = await pool.execute(sql, [nombre, id_especialidad]);
 
-        const [resultado] = await pool.execute(sql, [nombre, id_especialidad]);
-
-        return resultado;
+        if (result.affectedRows === 0) {
+            return null;
+        }
+        return id_especialidad;
     }
 
-    // activo = 0 representa baja lógica (el registro no se elimina físicamente)
-    borrar = async (id_especialidad) => {
-        const sql = "UPDATE especialidades SET activo = 0 WHERE id_especialidad = ?";
-
-        const [resultado] = await pool.execute(sql, [id_especialidad]);
-
-        return resultado;
+    eliminar = async (id_especialidad) => {
+        const sql = 'UPDATE especialidades SET activo = 0 WHERE id_especialidad = ?';
+        const [result] = await pool.execute(sql, [id_especialidad]);
+        if (result.affectedRows === 0) {
+            return null;
+        }
+        return true;
     }
 }
