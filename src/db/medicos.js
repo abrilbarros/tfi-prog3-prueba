@@ -1,0 +1,72 @@
+import { pool } from "./conexion.js";
+
+export default class Medicos {
+
+    buscarTodos = async () => {
+        const sql = "SELECT * FROM v_medicos";
+        const [medicos] = await pool.execute(sql);
+        return medicos;
+    }
+
+    buscarPorId = async (id_medico) => {
+        const sql = `SELECT * FROM medicos WHERE id_medico = ?`;
+        const [medico] = await pool.execute(sql, [id_medico]);
+        return medico[0];
+    }
+
+    relacionarConObraSocial = async (id_medico, obras_sociales) => {
+
+        const conexion = await pool.getConnection();
+
+        try {
+            await conexion.beginTransaction();
+
+            for (const obra_social of obras_sociales) {
+
+                // Verifica si la relación ya existe
+                const sqlVerificar = `
+                SELECT *
+                FROM medicos_obras_sociales
+                WHERE id_medico = ?
+                AND id_obra_social = ?
+            `;
+
+                const [existe] = await conexion.execute(
+                    sqlVerificar,
+                    [id_medico, obra_social.id_obra_social]
+                );
+
+                // Si la relación ya existe, continúa con la siguiente
+                if (existe.length > 0) {
+                    continue;
+                }
+
+                // Crear relación entre médico y obra social
+                const sql = `
+                INSERT INTO medicos_obras_sociales
+                (id_medico, id_obra_social)
+                VALUES (?, ?);
+            `;
+
+                await conexion.execute(
+                    sql,
+                    [id_medico, obra_social.id_obra_social]
+                );
+            }
+
+            await conexion.commit();
+            conexion.release();
+
+            return {
+                id_medico: Number(id_medico),
+                obras_sociales: obras_sociales
+            };
+
+        } catch (error) {
+            await conexion.rollback();
+            conexion.release();
+
+            return false;
+        }
+    }
+}

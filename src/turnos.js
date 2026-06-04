@@ -2,6 +2,7 @@ import express from "express";
 
 import { router as v1EspecialidadesRutas } from "./rutas/v1/especialidadesRutas.js";
 import { router as v1ObrasSocialesRutas } from "./rutas/v1/obrasSocialesRutas.js";
+import { router as v1MedicosRutas } from "./rutas/v1/medicosRutas.js";
 
 import { testConexion } from "./db/test-conexion.js";
 
@@ -26,12 +27,13 @@ app.get(
 
 app.use("/api/v1/especialidades", v1EspecialidadesRutas);
 app.use("/api/v1/obras-sociales", v1ObrasSocialesRutas);
+app.use('/api/v1/medicos', v1MedicosRutas);
 
 // Manejo de rutas inexistentes
 app.use((req, res) => {
     res.status(404).json({
         estado: false,
-        msg: "Ruta no encontrada."
+        mensaje: "Ruta no encontrada."
     });
 });
 
