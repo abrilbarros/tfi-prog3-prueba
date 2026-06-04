@@ -20,7 +20,7 @@ export async function testConexion() {
 
         console.error({
             codigo: error.code,
-            msg: error.message,
+            mensaje: error.message,
         });
 
         process.exit(1);
