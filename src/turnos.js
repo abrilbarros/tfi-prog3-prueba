@@ -3,6 +3,8 @@ import express from "express";
 import { router as v1EspecialidadesRutas } from "./rutas/v1/especialidadesRutas.js";
 import { router as v1ObrasSocialesRutas } from "./rutas/v1/obrasSocialesRutas.js";
 import { router as v1MedicosRutas } from "./rutas/v1/medicosRutas.js";
+import { router as v1TurnosRutas } from "./rutas/v1/turnosRutas.js";        
+import { router as v1EstadisticasRutas } from "./rutas/v1/estadisticasRutas.js"; 
 
 import { testConexion } from "./db/test-conexion.js";
 
@@ -28,6 +30,8 @@ app.get(
 app.use("/api/v1/especialidades", v1EspecialidadesRutas);
 app.use("/api/v1/obras-sociales", v1ObrasSocialesRutas);
 app.use('/api/v1/medicos', v1MedicosRutas);
+app.use('/api/v1/turnos', v1TurnosRutas);
+app.use('/api/v1/estadisticas', v1EstadisticasRutas);
 
 // Manejo de rutas inexistentes
 app.use((req, res) => {
