@@ -3,16 +3,23 @@ import { check, param } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
 import TransformarDTO from '../../middlewares/transformarDTOs.js';
 import MedicosControlador from '../../controladores/medicosControlador.js';
-
+import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
 const router = express.Router();
 
 const medicosControlador = new MedicosControlador();
 const transformarDTO = new TransformarDTO();
 
-router.get('/', medicosControlador.buscarTodos);
+router.get('/', autorizarUsuarios([2,3]), medicosControlador.buscarTodos);
 
-router.post(
-    "/:id_medico/obras-sociales",
+router.get('/:id_medico', autorizarUsuarios([2,3])
+    [
+        param('id_medico', 'El parámetro debe ser entero').isInt(),
+        validarCampos
+    ],
+    medicosControlador.buscarPorId
+);
+
+router.post('/:id_medico/obras-sociales', autorizarUsuarios([3]),
     [
         param("id_medico")
             .notEmpty().withMessage("El id_medico es obligatorio.")

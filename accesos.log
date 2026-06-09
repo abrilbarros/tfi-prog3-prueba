@@ -1,0 +1,7 @@
+::ffff:127.0.0.1 - - [08/Jun/2026:03:25:31 +0000] "GET /api/v1/medicos HTTP/1.1" 200 506 "-" "bruno-runtime/1.0"
+::ffff:127.0.0.1 - - [08/Jun/2026:23:44:04 +0000] "GET /api/v1/especialidades HTTP/1.1" 401 - "-" "bruno-runtime/1.0"
+::ffff:127.0.0.1 - - [08/Jun/2026:23:44:14 +0000] "GET /api/v1/especialidades HTTP/1.1" 401 - "-" "bruno-runtime/1.0"
+::ffff:127.0.0.1 - - [08/Jun/2026:23:49:48 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 219 "-" "bruno-runtime/1.0"
+::ffff:127.0.0.1 - - [09/Jun/2026:00:14:46 +0000] "GET /api/v1/especialidades HTTP/1.1" 401 - "-" "bruno-runtime/1.0"
+::ffff:127.0.0.1 - - [09/Jun/2026:00:15:02 +0000] "GET /api/v1/especialidades HTTP/1.1" 200 317 "-" "bruno-runtime/1.0"
+::ffff:127.0.0.1 - - [09/Jun/2026:00:15:05 +0000] "GET /api/v1/especialidades HTTP/1.1" 200 317 "-" "bruno-runtime/1.0"
