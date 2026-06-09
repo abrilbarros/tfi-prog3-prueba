@@ -1,6 +1,7 @@
 import express  from 'express';
 import { check, param } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
+import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
 
 import TransformarDTO from '../../middlewares/transformarDTOs.js';
 import ObrasSocialesControlador from '../../controladores/obrasSocialesControlador.js';
@@ -10,9 +11,9 @@ const router = express.Router();
 const obrasSocialesControlador = new ObrasSocialesControlador();
 const transformarDTO = new TransformarDTO();
 
-router.get('/', obrasSocialesControlador.buscarTodas);
+router.get('/', autorizarUsuarios([3]), obrasSocialesControlador.buscarTodas);
 
-router.get('/:id_obra_social', 
+router.get('/:id_obra_social', autorizarUsuarios([3]),
     [
         param('id_obra_social', 'El parámetro debe ser entero').isInt(),    
         validarCampos
@@ -20,7 +21,7 @@ router.get('/:id_obra_social',
     obrasSocialesControlador.buscarPorId
 );
 
-router.post('/', 
+router.post('/', autorizarUsuarios([3]), 
     [
         check('nombre')
             .notEmpty().withMessage('El nombre es obligatorio.')
@@ -37,7 +38,7 @@ router.post('/',
     transformarDTO.obrasSocialesCrearDTO,
     obrasSocialesControlador.crear);
 
-router.put('/:id_obra_social',
+router.put('/:id_obra_social', autorizarUsuarios([3]),
     [
         param('id_obra_social', 'El parámetro debe ser entero').isInt(),
         check('nombre')
@@ -60,7 +61,7 @@ router.put('/:id_obra_social',
     transformarDTO.obrasSocialesActualizarDTO,
     obrasSocialesControlador.modificar);
 
-router.delete('/:id_obra_social', 
+router.delete('/:id_obra_social', autorizarUsuarios([3]),
     [
         param('id_obra_social', 'El parámetro debe ser entero').isInt(),    
         validarCampos
