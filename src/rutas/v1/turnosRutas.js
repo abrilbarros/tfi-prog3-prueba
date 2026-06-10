@@ -6,32 +6,169 @@ import TurnosControlador from "../../controladores/turnosControlador.js";
 const router = express.Router();
 const turnosControlador = new TurnosControlador();
 
+/**
+ * @swagger
+ * /api/v1/turnos:
+ *   get:
+ *     summary: Listar todos los turnos
+ *     tags: [Turnos]
+ *     responses:
+ *       200:
+ *         description: Lista de turnos obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 estado:
+ *                   type: boolean
+ *                 turnos:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Turno'
+ *       404:
+ *         description: No se encontraron turnos
+ */
 router.get('/', turnosControlador.buscarTodas);
 
+/**
+ * @swagger
+ * /api/v1/turnos/{id_turno}:
+ *   get:
+ *     summary: Obtener un turno por su ID
+ *     tags: [Turnos]
+ *     parameters:
+ *       - in: path
+ *         name: id_turno
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del turno
+ *     responses:
+ *       200:
+ *         description: Turno encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 estado:
+ *                   type: boolean
+ *                 turno:
+ *                   $ref: '#/components/schemas/Turno'
+ *       404:
+ *         description: Turno no encontrado
+ */
 router.get('/:id_turno',
-    [
-        param('id_turno', 'El parámetro debe ser entero').isInt(),
-        validarCampos
-    ],
+    [param('id_turno', 'El parámetro debe ser entero').isInt(), validarCampos],
     turnosControlador.buscarPorId
 );
 
+/**
+ * @swagger
+ * /api/v1/turnos/medico/{id_medico}:
+ *   get:
+ *     summary: Obtener turnos de un médico específico
+ *     tags: [Turnos]
+ *     parameters:
+ *       - in: path
+ *         name: id_medico
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del médico
+ *     responses:
+ *       200:
+ *         description: Lista de turnos del médico
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 estado:
+ *                   type: boolean
+ *                 turnos:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Turno'
+ */
 router.get('/medico/:id_medico',
-    [
-        param('id_medico', 'El parámetro debe ser entero').isInt(),
-        validarCampos
-    ],
+    [param('id_medico', 'El parámetro debe ser entero').isInt(), validarCampos],
     turnosControlador.buscarPorMedico
 );
 
+/**
+ * @swagger
+ * /api/v1/turnos/paciente/{id_paciente}:
+ *   get:
+ *     summary: Obtener turnos de un paciente específico
+ *     tags: [Turnos]
+ *     parameters:
+ *       - in: path
+ *         name: id_paciente
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del paciente
+ *     responses:
+ *       200:
+ *         description: Lista de turnos del paciente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 estado:
+ *                   type: boolean
+ *                 turnos:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Turno'
+ */
 router.get('/paciente/:id_paciente',
-    [
-        param('id_paciente', 'El parámetro debe ser entero').isInt(),
-        validarCampos
-    ],
+    [param('id_paciente', 'El parámetro debe ser entero').isInt(), validarCampos],
     turnosControlador.buscarPorPaciente
 );
 
+/**
+ * @swagger
+ * /api/v1/turnos:
+ *   post:
+ *     summary: Crear un nuevo turno
+ *     tags: [Turnos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id_medico
+ *               - id_paciente
+ *               - id_obra_social
+ *               - fecha_hora
+ *             properties:
+ *               id_medico:
+ *                 type: integer
+ *                 example: 3
+ *               id_paciente:
+ *                 type: integer
+ *                 example: 2
+ *               id_obra_social:
+ *                 type: integer
+ *                 example: 2
+ *               fecha_hora:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2026-12-25 15:30:00"
+ *     responses:
+ *       201:
+ *         description: Turno creado correctamente
+ *       400:
+ *         description: Error en los datos o médico no disponible
+ *       500:
+ *         description: Error interno
+ */
 router.post('/',
     [
         check('id_medico', 'El ID del médico es obligatorio').isInt(),
@@ -43,19 +180,55 @@ router.post('/',
     turnosControlador.crear
 );
 
+/**
+ * @swagger
+ * /api/v1/turnos/{id_turno}/marcar-atendido:
+ *   put:
+ *     summary: Marcar un turno como atendido
+ *     tags: [Turnos]
+ *     parameters:
+ *       - in: path
+ *         name: id_turno
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del turno
+ *     responses:
+ *       200:
+ *         description: Turno marcado como atendido
+ *       400:
+ *         description: El turno ya fue atendido
+ *       404:
+ *         description: Turno no encontrado
+ */
 router.put('/:id_turno/marcar-atendido',
-    [
-        param('id_turno', 'El parámetro debe ser entero').isInt(),
-        validarCampos
-    ],
+    [param('id_turno', 'El parámetro debe ser entero').isInt(), validarCampos],
     turnosControlador.marcarAtendido
 );
 
+/**
+ * @swagger
+ * /api/v1/turnos/{id_turno}:
+ *   delete:
+ *     summary: Cancelar un turno (soft delete)
+ *     tags: [Turnos]
+ *     parameters:
+ *       - in: path
+ *         name: id_turno
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del turno
+ *     responses:
+ *       200:
+ *         description: Turno cancelado correctamente
+ *       400:
+ *         description: No se puede cancelar un turno ya atendido
+ *       404:
+ *         description: Turno no encontrado
+ */
 router.delete('/:id_turno',
-    [
-        param('id_turno', 'El parámetro debe ser entero').isInt(),
-        validarCampos
-    ],
+    [param('id_turno', 'El parámetro debe ser entero').isInt(), validarCampos],
     turnosControlador.cancelar
 );
 

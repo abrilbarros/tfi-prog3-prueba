@@ -2,6 +2,7 @@ import express from "express";
 import fs from "fs";
 import morgan from "morgan";
 import passport from "passport";
+import { setupSwagger } from './docs/swagger.js';
 
 import { estrategia,validacion } from "./config/passport.js";
 
@@ -40,6 +41,8 @@ app.get("/", (req, res) => {
         });
     }
 );
+
+setupSwagger(app);
 
 app.use("/api/v1/especialidades", passport.authenticate('jwt', {session: false}), v1EspecialidadesRutas);
 app.use("/api/v1/obras-sociales", passport.authenticate('jwt', {session: false}), v1ObrasSocialesRutas);
