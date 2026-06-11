@@ -11,7 +11,7 @@ const transformarDTO = new TransformarDTO();
 
 router.get('/', autorizarUsuarios([2,3]), medicosControlador.buscarTodos);
 
-router.get('/:id_medico', autorizarUsuarios([2,3])
+router.get('/:id_medico', autorizarUsuarios([2,3]),
     [
         param('id_medico', 'El parámetro debe ser entero').isInt(),
         validarCampos

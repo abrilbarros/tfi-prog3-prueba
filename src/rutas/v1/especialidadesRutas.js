@@ -41,7 +41,7 @@ router.put('/:id_especialidad', autorizarUsuarios([3]),
     ],
     especialidadesControlador.modificar);
 
-router.delete('/:id_especialidad', autorizarUsuarios([3])
+router.delete('/:id_especialidad', autorizarUsuarios([3]),
     [
         param('id_especialidad', 'El parámetro debe ser entero').isInt(),
         validarCampos
