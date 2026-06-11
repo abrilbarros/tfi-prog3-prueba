@@ -22,6 +22,7 @@ const turnosControlador = new TurnosControlador();
  *               properties:
  *                 estado:
  *                   type: boolean
+ *                   example: true
  *                 turnos:
  *                   type: array
  *                   items:
@@ -43,24 +44,19 @@ router.get('/', turnosControlador.buscarTodas);
  *         required: true
  *         schema:
  *           type: integer
+ *           minimum: 1
  *         description: ID del turno
+ *         example: 1
  *     responses:
  *       200:
  *         description: Turno encontrado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 estado:
- *                   type: boolean
- *                 turno:
- *                   $ref: '#/components/schemas/Turno'
+ *       400:
+ *         description: ID inválido
  *       404:
  *         description: Turno no encontrado
  */
 router.get('/:id_turno',
-    [param('id_turno', 'El parámetro debe ser entero').isInt(), validarCampos],
+    [param('id_turno').isInt().withMessage('El ID debe ser un número entero'), validarCampos],
     turnosControlador.buscarPorId
 );
 
@@ -76,24 +72,17 @@ router.get('/:id_turno',
  *         required: true
  *         schema:
  *           type: integer
+ *           minimum: 1
  *         description: ID del médico
+ *         example: 1
  *     responses:
  *       200:
  *         description: Lista de turnos del médico
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 estado:
- *                   type: boolean
- *                 turnos:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Turno'
+ *       400:
+ *         description: ID inválido
  */
 router.get('/medico/:id_medico',
-    [param('id_medico', 'El parámetro debe ser entero').isInt(), validarCampos],
+    [param('id_medico').isInt().withMessage('El ID debe ser un número entero'), validarCampos],
     turnosControlador.buscarPorMedico
 );
 
@@ -109,24 +98,17 @@ router.get('/medico/:id_medico',
  *         required: true
  *         schema:
  *           type: integer
+ *           minimum: 1
  *         description: ID del paciente
+ *         example: 1
  *     responses:
  *       200:
  *         description: Lista de turnos del paciente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 estado:
- *                   type: boolean
- *                 turnos:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Turno'
+ *       400:
+ *         description: ID inválido
  */
 router.get('/paciente/:id_paciente',
-    [param('id_paciente', 'El parámetro debe ser entero').isInt(), validarCampos],
+    [param('id_paciente').isInt().withMessage('El ID debe ser un número entero'), validarCampos],
     turnosControlador.buscarPorPaciente
 );
 
@@ -192,17 +174,19 @@ router.post('/',
  *         required: true
  *         schema:
  *           type: integer
+ *           minimum: 1
  *         description: ID del turno
+ *         example: 1
  *     responses:
  *       200:
  *         description: Turno marcado como atendido
  *       400:
- *         description: El turno ya fue atendido
+ *         description: ID inválido o turno ya atendido
  *       404:
  *         description: Turno no encontrado
  */
 router.put('/:id_turno/marcar-atendido',
-    [param('id_turno', 'El parámetro debe ser entero').isInt(), validarCampos],
+    [param('id_turno').isInt().withMessage('El ID debe ser un número entero'), validarCampos],
     turnosControlador.marcarAtendido
 );
 
@@ -218,17 +202,19 @@ router.put('/:id_turno/marcar-atendido',
  *         required: true
  *         schema:
  *           type: integer
+ *           minimum: 1
  *         description: ID del turno
+ *         example: 1
  *     responses:
  *       200:
  *         description: Turno cancelado correctamente
  *       400:
- *         description: No se puede cancelar un turno ya atendido
+ *         description: ID inválido o turno ya atendido
  *       404:
  *         description: Turno no encontrado
  */
 router.delete('/:id_turno',
-    [param('id_turno', 'El parámetro debe ser entero').isInt(), validarCampos],
+    [param('id_turno').isInt().withMessage('El ID debe ser un número entero'), validarCampos],
     turnosControlador.cancelar
 );
 
