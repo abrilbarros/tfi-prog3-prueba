@@ -1,13 +1,17 @@
 import express from 'express';
-import { check } from 'express-validator';
+import { check, param } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
 import UsuariosControlador from '../../controladores/usuariosControlador.js';
 import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
+import TransformarDTO from '../../middlewares/transformarDTOs.js';
 
 
 const router = express.Router();
 
 const usuariosControlador = new UsuariosControlador();
+const transformarDTO = new TransformarDTO();
+
+router.get('/admins', autorizarUsuarios([3]), usuariosControlador.listarAdmins);
 
 router.post('/', autorizarUsuarios([3]),
     [
@@ -52,7 +56,7 @@ router.post('/', autorizarUsuarios([3]),
 
         check('id_obra_social')
             .if((value, { req }) => req.body.rol === 2)
-            .isInt( { min: 0 }).withMessage('El ID de obra social debe ser un número entero (0 para Particular).')
+            .isInt( { min: 0 }).withMessage('El ID de obra social debe ser un número entero (1 para Particular).')
             .notEmpty().withMessage("El ID de obra social es obligatoria para pacientes."),
 
         check('id_especialidad')
@@ -73,7 +77,34 @@ router.post('/', autorizarUsuarios([3]),
 
         validarCampos
     ],
+    transformarDTO.usuariosCrearDTO,
     usuariosControlador.crear
+);
+
+router.put('/:id_usuario', autorizarUsuarios([3]),
+    [
+        param('id_usuario').notEmpty().withMessage('El Id usuario es obligatorio.')
+            .isInt().withMessage('El Id debe ser un numero entero'),
+        check('email').isEmail().withMessage('Email invalido!.')
+            .optional(),
+        check('descripcion').optional(),
+        
+        check('valor_consulta').optional(),
+        
+        check('id_obra_social').optional(),
+        
+        validarCampos
+    ],
+    transformarDTO.usuariosModificarDTO,
+    usuariosControlador.modificar
+);
+
+router.delete('/:id_usuario', autorizarUsuarios([3]),
+    [
+        param('id_usuario', 'El parámetro debe ser entero').isInt(),    
+        validarCampos
+    ],
+    usuariosControlador.eliminar
 );
 
 export { router };

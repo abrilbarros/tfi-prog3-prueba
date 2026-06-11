@@ -1,3 +1,5 @@
+import crypto from 'crypto'
+
 export default class TransformarDTO {
     obrasSocialesCrearDTO = async (req, res, next) => {
         const { nombre, descripcion, porcentaje_descuento, es_particular } = req.body;
@@ -51,5 +53,45 @@ export default class TransformarDTO {
         };
 
         next();
+    }
+
+    usuariosCrearDTO = async (req, res, next) => {
+        const { documento, apellido, nombres, email, contrasenia, rol, id_especialidad, matricula, descripcion, valor_consulta, id_obra_social} = req.body;
+
+        req.dto = {
+            documento : parseInt(documento),
+            apellido : apellido.trim(),
+            nombres : nombres.trim(),
+            email : email.trim().toLowerCase(),
+            contrasenia : crypto.createHash('sha256').update(contrasenia).digest('hex'),
+            rol : rol,
+
+            //Datos de medico
+            id_especialidad : id_especialidad ? parseInt(id_especialidad) : null,
+            matricula : matricula ? parseInt(matricula) : null,
+            descripcion : descripcion ? descripcion.trim() : null,
+            valor_consulta : valor_consulta ? parseInt(valor_consulta) : null,
+
+            //Datos de Paciente
+
+            id_obra_social : id_obra_social ? parseInt(id_obra_social) : null
+        }
+
+        next();
+    }
+
+    usuariosModificarDTO = async(req, res, next) => {
+        const { email, descripcion, valor_consulta, id_obra_social} = req.body;
+
+        req.dto = {
+            email: email ? email.trim().toLowerCase() : null,
+
+            descripcion : descripcion ? descripcion.trim() : null,
+            valor_consulta : valor_consulta ? parseInt(valor_consulta) : null,
+
+            id_obra_social : id_obra_social ? parseInt(id_obra_social) : null
+        }
+
+        next()
     }
 }
