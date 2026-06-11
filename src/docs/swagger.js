@@ -1,0 +1,57 @@
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+
+const options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'API Clínica Médica',
+            version: '1.0.0',
+            description: 'API para gestión de turnos médicos - Trabajo Final Integrador',
+            contact: {
+                name: 'Grupo I',
+                email: 'grupoi@uner.edu.ar'
+            }
+        },
+        servers: [
+            {
+                url: 'http://localhost:3000',
+                description: 'Servidor de desarrollo'
+            }
+        ],
+        components: {
+            schemas: {
+                Turno: {
+                    type: 'object',
+                    properties: {
+                        id_turno_reserva: { type: 'integer', example: 1 },
+                        id_medico: { type: 'integer', example: 3 },
+                        id_paciente: { type: 'integer', example: 2 },
+                        id_obra_social: { type: 'integer', example: 2 },
+                        fecha_hora: { type: 'string', format: 'date-time', example: '2026-12-25 15:30:00' },
+                        valor_total: { type: 'number', example: 9000.00 },
+                        atendido: { type: 'integer', example: 0 }
+                    }
+                },
+                EstadisticaGeneral: {
+                    type: 'object',
+                    properties: {
+                        total_turnos: { type: 'integer' },
+                        total_atendidos: { type: 'integer' },
+                        total_pendientes: { type: 'integer' },
+                        monto_total: { type: 'number' },
+                        promedio_consulta: { type: 'number' }
+                    }
+                }
+            }
+        }
+    },
+    apis: ['./src/rutas/v1/*.js']
+};
+
+const swaggerSpec = swaggerJsdoc(options);
+
+export const setupSwagger = (app) => {
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    console.log('Documentación Swagger disponible en http://localhost:3000/api-docs');
+};

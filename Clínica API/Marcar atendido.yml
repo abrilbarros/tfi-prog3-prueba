@@ -1,0 +1,15 @@
+info:
+  name: Marcar atendido
+  type: http
+  seq: 1
+
+http:
+  method: PUT
+  url: http://localhost:3000/api/v1/turnos/1/marcar-atendido
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -2,6 +2,7 @@ import express from "express";
 import fs from "fs";
 import morgan from "morgan";
 import passport from "passport";
+import { setupSwagger } from './docs/swagger.js';
 
 import { estrategia,validacion } from "./config/passport.js";
 
@@ -10,6 +11,8 @@ import { router as v1ObrasSocialesRutas } from "./rutas/v1/obrasSocialesRutas.js
 import { router as v1MedicosRutas } from "./rutas/v1/medicosRutas.js";
 import { router as v1UsuariosRutas} from "./rutas/v1/usuariosRutas.js";
 import { router as v1AuthRutas} from "./rutas/v1/authRutas.js"
+import { router as v1TurnosRutas } from "./rutas/v1/turnosRutas.js";        
+import { router as v1EstadisticasRutas } from "./rutas/v1/estadisticasRutas.js"; 
 
 import { testConexion } from "./db/test-conexion.js";
 
@@ -39,11 +42,15 @@ app.get("/", (req, res) => {
     }
 );
 
+setupSwagger(app);
+
 app.use("/api/v1/especialidades", passport.authenticate('jwt', {session: false}), v1EspecialidadesRutas);
 app.use("/api/v1/obras-sociales", passport.authenticate('jwt', {session: false}), v1ObrasSocialesRutas);
 app.use('/api/v1/medicos', passport.authenticate('jwt', {session: false}), v1MedicosRutas);
 app.use('/api/v1/usuarios', passport.authenticate('jwt', {session: false}), v1UsuariosRutas);
 app.use('/api/v1/auth', v1AuthRutas);
+app.use('/api/v1/turnos', v1TurnosRutas);                   
+app.use('/api/v1/estadisticas', v1EstadisticasRutas);       
 
 // Manejo de rutas inexistentes
 app.use((req, res) => {
