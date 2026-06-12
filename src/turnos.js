@@ -26,7 +26,7 @@ let log = fs.createWriteStream('./accesos.log', {
 })
 
 app.use(morgan('dev'));
-app.use(morgan('combined', {stream: log})),
+app.use(morgan('combined', {stream: log}));
 
 app.use(express.json());
 

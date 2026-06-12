@@ -82,6 +82,27 @@ const options = {
                         monto_total: { type: 'number', example: 27000.00 },
                         promedio: { type: 'number', example: 9000.00 }
                     }
+                },
+                CrearUsuario: {
+                    type: 'object',
+                    // Todos los campos obligatorios aquí:
+                    required: ['documento', 'apellido', 'nombres', 'email', 'contrasenia', 'rol'],
+                    properties: {
+                        // Obligatorios
+                        documento: { type: 'string', example: '12345678' },
+                        apellido: { type: 'string', example: 'Perez' },
+                        nombres: { type: 'string', example: 'Juan' },
+                        email: { type: 'string', example: 'juan.perez@ejemplo.com' },
+                        contrasenia: { type: 'string', format: 'password', example: 'Password123' },
+                        rol: { type: 'string', enum: ['admin', 'medico', 'paciente'], example: 'paciente' },
+
+                        // Opcionales (no están en el array 'required')
+                        id_especialidad: { type: 'integer', example: 5 },
+                        matricula: { type: 'string', example: 'MAT-98765' },
+                        descripcion: { type: 'string', example: 'Especialista en traumatología' },
+                        valor_consulta: { type: 'number', example: 5000.50 },
+                        id_obra_social: { type: 'integer', example: 2 }
+                    }
                 }
             }
         },

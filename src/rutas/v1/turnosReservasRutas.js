@@ -27,6 +27,7 @@ const turnosControlador = new TurnosControlador();
  *                 turnos:
  *                   type: array
  *                   items:
+ *                      $ref: '#/components/schemas/Turno'
  *                     
  *       404:
  *         description: No se encontraron turnos
