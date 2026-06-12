@@ -126,6 +126,11 @@ export default class Usuarios {
             values.push(datosMedico.valor_consulta);
         }
 
+        if(datosMedico.id_especialidad != null) {
+            updates.push('id_especialidad = ?');
+            values.push(datosMedico.id_especialidad);
+        }
+
         if(updates.length === 0) {
             return null
         }

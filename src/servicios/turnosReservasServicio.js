@@ -1,4 +1,4 @@
-import Turnos from "../db/turnos.js";
+import Turnos from "../db/turnosReservas.js";
 import { pool } from "../db/conexion.js";
 
 export default class TurnosServicio {

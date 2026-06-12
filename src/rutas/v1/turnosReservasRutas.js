@@ -1,14 +1,15 @@
 import express from 'express';
 import { check, param } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
-import TurnosControlador from "../../controladores/turnosControlador.js";
+import TurnosControlador from "../../controladores/turnosReservasControlador.js";
+import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
 
 const router = express.Router();
 const turnosControlador = new TurnosControlador();
 
 /**
  * @swagger
- * /api/v1/turnos:
+ * /api/v1/turnosReservas:
  *   get:
  *     summary: Listar todos los turnos
  *     tags: [Turnos]
@@ -26,11 +27,19 @@ const turnosControlador = new TurnosControlador();
  *                 turnos:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Turno'
+ *                     
  *       404:
  *         description: No se encontraron turnos
  */
-router.get('/', turnosControlador.buscarTodas);
+router.get('/',
+    (req, res, next) => {
+        // Esto te mostrará quién está intentando entrar y qué rol tiene
+        console.log("--- DEBUG RUTA TURNOS ---");
+        console.log("Usuario en req:", req.user);
+        console.log("Rol del usuario:", req.user?.rol);
+        console.log("Tipo de dato del rol:", typeof req.user?.rol);
+        next(); // ¡IMPORTANTE! Esto le dice a Express que continúe al siguiente middleware
+    },autorizarUsuarios([3]), turnosControlador.buscarTodas);
 
 /**
  * @swagger
@@ -55,7 +64,7 @@ router.get('/', turnosControlador.buscarTodas);
  *       404:
  *         description: Turno no encontrado
  */
-router.get('/:id_turno',
+router.get('/:id_turno', autorizarUsuarios([3]),
     [param('id_turno').isInt().withMessage('El ID debe ser un número entero'), validarCampos],
     turnosControlador.buscarPorId
 );
@@ -81,7 +90,7 @@ router.get('/:id_turno',
  *       400:
  *         description: ID inválido
  */
-router.get('/medico/:id_medico',
+router.get('/medico/:id_medico', autorizarUsuarios([1]),
     [param('id_medico').isInt().withMessage('El ID debe ser un número entero'), validarCampos],
     turnosControlador.buscarPorMedico
 );
@@ -107,7 +116,7 @@ router.get('/medico/:id_medico',
  *       400:
  *         description: ID inválido
  */
-router.get('/paciente/:id_paciente',
+router.get('/paciente/:id_paciente', autorizarUsuarios([2]),
     [param('id_paciente').isInt().withMessage('El ID debe ser un número entero'), validarCampos],
     turnosControlador.buscarPorPaciente
 );
@@ -151,7 +160,7 @@ router.get('/paciente/:id_paciente',
  *       500:
  *         description: Error interno
  */
-router.post('/',
+router.post('/', autorizarUsuarios([2,3]),
     [
         check('id_medico', 'El ID del médico es obligatorio').isInt(),
         check('id_paciente', 'El ID del paciente es obligatorio').isInt(),
@@ -185,7 +194,7 @@ router.post('/',
  *       404:
  *         description: Turno no encontrado
  */
-router.put('/:id_turno/marcar-atendido',
+router.put('/:id_turno/marcar-atendido', autorizarUsuarios([1]),
     [param('id_turno').isInt().withMessage('El ID debe ser un número entero'), validarCampos],
     turnosControlador.marcarAtendido
 );
@@ -213,7 +222,7 @@ router.put('/:id_turno/marcar-atendido',
  *       404:
  *         description: Turno no encontrado
  */
-router.delete('/:id_turno',
+router.delete('/:id_turno', autorizarUsuarios([3]),
     [param('id_turno').isInt().withMessage('El ID debe ser un número entero'), validarCampos],
     turnosControlador.cancelar
 );

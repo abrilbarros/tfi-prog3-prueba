@@ -2,6 +2,7 @@ import express from 'express';
 import { query } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
 import EstadisticasControlador from "../../controladores/estadisticasControlador.js";
+import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
 
 const router = express.Router();
 const estadisticasControlador = new EstadisticasControlador();
@@ -48,7 +49,7 @@ const validarFechas = [
  *       400:
  *         description: Faltan parámetros de fecha
  */
-router.get("/", validarFechas, estadisticasControlador.obtenerEstadisticasGenerales);
+router.get("/", autorizarUsuarios([3]), validarFechas, estadisticasControlador.obtenerEstadisticasGenerales);
 
 /**
  * @swagger
@@ -73,7 +74,7 @@ router.get("/", validarFechas, estadisticasControlador.obtenerEstadisticasGenera
  *       200:
  *         description: Estadísticas por médico
  */
-router.get("/medicos", validarFechas, estadisticasControlador.obtenerEstadisticasPorMedico);
+router.get("/medicos", autorizarUsuarios([3]), validarFechas, estadisticasControlador.obtenerEstadisticasPorMedico);
 
 /**
  * @swagger
@@ -98,7 +99,7 @@ router.get("/medicos", validarFechas, estadisticasControlador.obtenerEstadistica
  *       200:
  *         description: Estadísticas por obra social
  */
-router.get("/obras-sociales", validarFechas, estadisticasControlador.obtenerEstadisticasPorObraSocial);
+router.get("/obras-sociales",autorizarUsuarios([3]), validarFechas, estadisticasControlador.obtenerEstadisticasPorObraSocial);
 
 /**
  * @swagger
@@ -132,6 +133,6 @@ router.get("/obras-sociales", validarFechas, estadisticasControlador.obtenerEsta
  *       500:
  *         description: Error al generar el PDF
  */
-router.get("/pdf", validarFechas, estadisticasControlador.generarPDF);
+router.get("/pdf", autorizarUsuarios([3]), validarFechas, estadisticasControlador.generarPDF);
 
 export { router };

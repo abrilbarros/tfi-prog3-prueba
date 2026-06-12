@@ -8,7 +8,8 @@ export default class ModificarUsuarioDTO {
 
         this.medico = {
             descripcion: objeto.descripcion,
-            valor_consulta: objeto.valor_consulta
+            valor_consulta: objeto.valor_consulta,
+            id_especilidad: objeto.id_especilidad
         };
 
         this.paciente = {

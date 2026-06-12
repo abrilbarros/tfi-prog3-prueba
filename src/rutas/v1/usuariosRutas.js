@@ -11,6 +11,30 @@ const router = express.Router();
 const usuariosControlador = new UsuariosControlador();
 const transformarDTO = new TransformarDTO();
 
+/**
+ * @swagger
+ * /api/v1/usuarios/admins:
+ *   get:
+ *     summary: Listar todas las especialidades
+ *     tags: [Usuarios]
+ *     responses:
+ *       200:
+ *         description: Lista de Admins obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 estado:
+ *                   type: boolean
+ *                   example: true
+ *                 turnos:
+ *                   type: array
+ *                   items:
+ *                   
+ *       404:
+ *         description: No se encontraron Administradores
+ */
 router.get('/admins', autorizarUsuarios([3]), usuariosControlador.listarAdmins);
 
 router.post('/', autorizarUsuarios([3]),
@@ -90,6 +114,8 @@ router.put('/:id_usuario', autorizarUsuarios([3]),
         check('descripcion').optional(),
         
         check('valor_consulta').optional(),
+
+        check('id_especialidad').optional(),
         
         check('id_obra_social').optional(),
         

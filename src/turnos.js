@@ -11,7 +11,7 @@ import { router as v1ObrasSocialesRutas } from "./rutas/v1/obrasSocialesRutas.js
 import { router as v1MedicosRutas } from "./rutas/v1/medicosRutas.js";
 import { router as v1UsuariosRutas} from "./rutas/v1/usuariosRutas.js";
 import { router as v1AuthRutas} from "./rutas/v1/authRutas.js"
-import { router as v1TurnosRutas } from "./rutas/v1/turnosRutas.js";        
+import { router as v1TurnosReservasRutas } from "./rutas/v1/turnosReservasRutas.js";        
 import { router as v1EstadisticasRutas } from "./rutas/v1/estadisticasRutas.js"; 
 
 import { testConexion } from "./db/test-conexion.js";
@@ -49,8 +49,8 @@ app.use("/api/v1/obras-sociales", passport.authenticate('jwt', {session: false})
 app.use('/api/v1/medicos', passport.authenticate('jwt', {session: false}), v1MedicosRutas);
 app.use('/api/v1/usuarios', passport.authenticate('jwt', {session: false}), v1UsuariosRutas);
 app.use('/api/v1/auth', v1AuthRutas);
-app.use('/api/v1/turnos', v1TurnosRutas);                   
-app.use('/api/v1/estadisticas', v1EstadisticasRutas);       
+app.use('/api/v1/turnosReservas', passport.authenticate('jwt', {session: false}), v1TurnosReservasRutas);                   
+app.use('/api/v1/estadisticas', passport.authenticate('jwt', {session: false}), v1EstadisticasRutas);       
 
 // Manejo de rutas inexistentes
 app.use((req, res) => {
