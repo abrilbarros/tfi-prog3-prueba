@@ -37,6 +37,26 @@ const transformarDTO = new TransformarDTO();
  */
 router.get('/admins', autorizarUsuarios([3]), usuariosControlador.listarAdmins);
 
+/**
+ * @swagger
+ * /api/v1/usuarios:
+ *   post:
+ *     summary: Crear un nuevo usuario
+ *     tags: [Usuarios]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CrearUsuario'
+ *     responses:
+ *       201:
+ *         description: Usuario creado correctamente
+ *       400:
+ *         description: Error en los datos
+ *       500:
+ *         description: Error interno
+ */
 router.post('/', autorizarUsuarios([3]),
     [
         check('documento')
