@@ -1,4 +1,4 @@
-import TurnosServicio from "../servicios/turnosServicio.js";
+import TurnosServicio from "../servicios/turnosReservasServicio.js";
 
 export default class TurnosControlador {
     constructor() {

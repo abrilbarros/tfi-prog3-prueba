@@ -20,6 +20,13 @@ const options = {
             }
         ],
         components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                }
+            },
             schemas: {
                 Turno: {
                     type: 'object',
@@ -77,7 +84,12 @@ const options = {
                     }
                 }
             }
-        }
+        },
+        security: [
+            {
+                bearerAuth: []
+            }
+        ]
     },
     apis: ['./src/rutas/v1/*.js']
 };

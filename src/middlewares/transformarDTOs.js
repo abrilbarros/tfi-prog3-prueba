@@ -81,14 +81,15 @@ export default class TransformarDTO {
     }
 
     usuariosModificarDTO = async(req, res, next) => {
-        const { email, descripcion, valor_consulta, id_obra_social} = req.body;
+        const { email, descripcion, valor_consulta, id_especialidad, id_obra_social} = req.body;
 
         req.dto = {
             email: email ? email.trim().toLowerCase() : null,
 
             descripcion : descripcion ? descripcion.trim() : null,
             valor_consulta : valor_consulta ? parseInt(valor_consulta) : null,
-
+            id_especialidad : id_especialidad ? parseInt(id_especialidad) : null,
+            
             id_obra_social : id_obra_social ? parseInt(id_obra_social) : null
         }
 
