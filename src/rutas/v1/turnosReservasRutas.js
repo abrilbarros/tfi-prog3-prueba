@@ -32,15 +32,7 @@ const turnosControlador = new TurnosControlador();
  *       404:
  *         description: No se encontraron turnos
  */
-router.get('/',
-    (req, res, next) => {
-        // Esto te mostrará quién está intentando entrar y qué rol tiene
-        console.log("--- DEBUG RUTA TURNOS ---");
-        console.log("Usuario en req:", req.user);
-        console.log("Rol del usuario:", req.user?.rol);
-        console.log("Tipo de dato del rol:", typeof req.user?.rol);
-        next(); // ¡IMPORTANTE! Esto le dice a Express que continúe al siguiente middleware
-    },autorizarUsuarios([3]), turnosControlador.buscarTodas);
+router.get('/',autorizarUsuarios([3]), turnosControlador.buscarTodas);
 
 /**
  * @swagger
