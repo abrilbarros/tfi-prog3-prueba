@@ -75,6 +75,14 @@ export default class ObrasSocialesControlador {
 
         }catch(error){
             console.log(`Error en POST /obras-sociales ${error}`);
+
+            if (error.code === "ER_DUP_ENTRY") {
+                return res.status(409).json({
+                    estado: false,
+                    mensaje: 'Ya existe una obra social con ese nombre.'
+                });
+            }
+
             res.status(500).json(
                 {
                     'estado': false, 
@@ -89,11 +97,6 @@ export default class ObrasSocialesControlador {
             const idObraSocial = req.params.id_obra_social;
             const obraSocial = req.dto;
 
-            // verifico
-            console.log(obraSocial === 0);
-
-            console.log(Object.keys(obraSocial));
-            
             if (Object.keys(obraSocial).length === 0) {
                 return res.status(400).json({
                     estado: false,
@@ -118,6 +121,14 @@ export default class ObrasSocialesControlador {
 
         }catch(error){
             console.log(`Error en PUT /obras-sociales/:id_obra_social ${error}`);
+
+            if (error.code === "ER_DUP_ENTRY") {
+                return res.status(409).json({
+                    estado: false,
+                    mensaje: 'Ya existe una obra social con ese nombre.'
+                });
+            }
+
             res.status(500).json(
                 {
                     'estado': false, 
@@ -142,7 +153,7 @@ export default class ObrasSocialesControlador {
             return res.status(204).send();
 
         }catch(error){
-            console.log(`Error en PUT /obras-sociales/:id_obra_social ${error}`);
+            console.log(`Error en DELETE /obras-sociales/:id_obra_social ${error}`);
             res.status(500).json(
                 {
                     'estado': false, 

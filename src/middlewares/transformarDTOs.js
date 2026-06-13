@@ -1,6 +1,30 @@
 import crypto from 'crypto'
+import EspecialidadesCrearDTO from '../dtos/especialidadesCrearDTO.js';
 
 export default class TransformarDTO {
+    especialidadesCrearDTO = async (req, res, next) => {
+        req.dto = new EspecialidadesCrearDTO(req.body);
+
+        next();
+    }
+
+    especialidadesActualizarDTO = async (req, res, next) => {
+        const { id_especialidad } = req.params;
+        const { nombre } = req.body;
+
+        const dto = {
+            id_especialidad: parseInt(id_especialidad)
+        };
+
+        if (nombre !== undefined) {
+            dto.nombre = nombre.trim().toUpperCase();
+        }
+
+        req.dto = dto;
+
+        next();
+    }
+
     obrasSocialesCrearDTO = async (req, res, next) => {
         const { nombre, descripcion, porcentaje_descuento, es_particular } = req.body;
 
