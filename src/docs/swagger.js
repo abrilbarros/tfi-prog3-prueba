@@ -52,6 +52,47 @@ const options = {
                         atendido: { type: 'integer', example: 0 }
                     }
                 },
+                Especialidad: {
+                    type: 'object',
+                    properties: {
+                        id_especialidad: { type: 'integer', example: 1 },
+                        nombre: { type: 'string', example: 'TRAUMATOLOGIA' }
+                    }
+                },
+                Medico: {
+                    type: 'object',
+                    properties: {
+                        id_medico: { type: 'integer', example: 1 },
+                        id_usuario: { type: 'integer', example: 1 },
+                        apellido: { type: 'string', example: 'Lopez' },
+                        nombres: { type: 'string', example: 'Marcelo' },
+                        email: { type: 'string', example: 'lopmar@correo.com' },
+                        foto_path: { type: 'string', example: '' }
+                    }
+                },
+                ObraSocial: {
+                    type: 'object',
+                    properties: {
+                        id_obra_social: { type: 'integer', example: 2 },
+                        nombre: { type: 'string', example: 'OSUNER' },
+                        descripcion: { type: 'string', example: 'Obra social de la universidad' },
+                        porcentaje_descuento: { type: 'number', example: 40.00 },
+                        es_particular: { type: 'boolean', example: false },
+                        activo: { type: 'integer', example: 1 }
+                    }
+                },
+                Paciente: {
+                    type: 'object',
+                    properties: {
+                        id_paciente: { type: 'integer', example: 2 },
+                        id_usuario: { type: 'integer', example: 8 },
+                        apellido: { type: 'string', example: 'Hunk' },
+                        nombres: { type: 'string', example: 'Lorena' },
+                        email: { type: 'string', example: 'lorena.hunk@ejemplo.com' },
+                        foto_path: { type: 'string', example: '/uploads/pacientes/hunk.jpg' },
+                        id_obra_social: { type: 'integer', example: 2 }
+                    }
+                },
                 EstadisticaGeneral: {
                     type: 'object',
                     properties: {

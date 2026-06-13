@@ -1,5 +1,7 @@
-import Especialidades from "../db/especialidades.js"
 import apicache from "apicache";
+
+import Especialidades from "../db/especialidades.js"
+import EspecialidadesRespuestaDTO from "../dtos/especialidadesRespuestaDTO.js";
 
 
 export default class EspecialidadesServicio {
@@ -8,12 +10,19 @@ export default class EspecialidadesServicio {
         this.especialidades = new Especialidades();
     }
 
-    buscarTodas = () => {
-        return this.especialidades.buscarTodas();
+    buscarTodas = async () => {
+        const especialidades = await this.especialidades.buscarTodas();
+        return especialidades.map(especialidad => new EspecialidadesRespuestaDTO(especialidad));
     }
 
-    buscarPorId = (id_especialidad) => {
-        return this.especialidades.buscarPorId(id_especialidad);
+    buscarPorId = async (id_especialidad) => {
+        const especialidad = await this.especialidades.buscarPorId(id_especialidad);
+
+        if (!especialidad) {
+            return null;
+        }
+
+        return new EspecialidadesRespuestaDTO(especialidad);
     }
 
 
@@ -30,7 +39,7 @@ export default class EspecialidadesServicio {
         // Verifica si existe la especialidad
         const existe = await this.especialidades.buscarPorId(id_especialidad);
 
-        if (existe.length === 0) {
+        if (!existe) {
             return null;
         }
 
@@ -46,13 +55,16 @@ export default class EspecialidadesServicio {
     }
 
     eliminar = async (id_especialidad) => {
-        // verifica si existe la especialidad a eliminar
         const existe = await this.especialidades.buscarPorId(id_especialidad);
-        if (existe.length === 0) {
+
+        if (!existe) {
             return null;
         }
 
+        const eliminado = await this.especialidades.eliminar(id_especialidad);
+
         apicache.clear();
-        return this.especialidades.eliminar(id_especialidad);
+
+        return eliminado;
     }
 }

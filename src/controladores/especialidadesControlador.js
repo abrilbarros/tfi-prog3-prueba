@@ -65,12 +65,7 @@ export default class EspecialidadesControlador {
     // Crear una nueva especialidad
     crear = async (req, res) => {
         try {
-            const { nombre } = req.body;
-
-            // Crear objeto especialidad
-            const especialidad = {
-                nombre: nombre
-            };
+            const especialidad = req.dto;
 
             const nuevaEspecialidad = await this.especialidades.crear(especialidad);
 
@@ -101,12 +96,14 @@ export default class EspecialidadesControlador {
     modificar = async (req, res) => {
         try {
             const id_especialidad = req.params.id_especialidad;
-            const { nombre } = req.body;
+            const especialidad = req.dto;
 
-            // Crear objeto especialidad
-            const especialidad = {
-                nombre: nombre
-            };
+            if (Object.keys(especialidad).length === 1) {
+                return res.status(400).json({
+                    estado: false,
+                    mensaje: "No se recibieron los datos de la especialidad para modificar."
+                });
+            }
 
             const especialidadModificada = await this.especialidades.modificar(
                 id_especialidad,
@@ -167,8 +164,8 @@ export default class EspecialidadesControlador {
                 estado: true,
                 mensaje: "Especialidad eliminada.",
                 especialidad: {
-                    id_especialidad: especialidad[0].id_especialidad,
-                    especialidad: especialidad[0].nombre
+                    id_especialidad: especialidad.id_especialidad,
+                    especialidad: especialidad.nombre
                 }
             });
 

@@ -33,9 +33,22 @@ export default class Especialidades {
     }
 
     modificar = async (id_especialidad, especialidad) => {
-        const { nombre } = especialidad;
-        const sql = 'UPDATE especialidades SET nombre = ? WHERE id_especialidad = ?';
-        const [result] = await pool.execute(sql, [nombre, id_especialidad]);
+        const updates = [];
+        const values = [];
+
+        if (especialidad.nombre !== undefined) {
+            updates.push('nombre = ?');
+            values.push(especialidad.nombre);
+        }
+
+        if (updates.length === 0) {
+            return null;
+        }
+
+        const sql = `UPDATE especialidades SET ${updates.join(', ')} WHERE activo = 1 AND id_especialidad = ?`;
+        values.push(id_especialidad);
+
+        const [result] = await pool.execute(sql, values);
 
         if (result.affectedRows === 0) {
             return null;
@@ -44,7 +57,7 @@ export default class Especialidades {
     }
 
     eliminar = async (id_especialidad) => {
-        const sql = 'UPDATE especialidades SET activo = 0 WHERE id_especialidad = ?';
+        const sql = 'UPDATE especialidades SET activo = 0 WHERE activo = 1 AND id_especialidad = ?';
         const [result] = await pool.execute(sql, [id_especialidad]);
         if (result.affectedRows === 0) {
             return null;
