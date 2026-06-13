@@ -36,7 +36,7 @@ router.get('/',autorizarUsuarios([3]), turnosControlador.buscarTodas);
 
 /**
  * @swagger
- * /api/v1/turnos/{id_turno}:
+ * /api/v1/turnosReservas/{id_turno}:
  *   get:
  *     summary: Obtener un turno por su ID
  *     tags: [Turnos]
@@ -64,7 +64,7 @@ router.get('/:id_turno', autorizarUsuarios([3]),
 
 /**
  * @swagger
- * /api/v1/turnos/medico/{id_medico}:
+ * /api/v1/turnosReservas/medico/{id_medico}:
  *   get:
  *     summary: Obtener turnos de un médico específico
  *     tags: [Turnos]
@@ -90,7 +90,7 @@ router.get('/medico/:id_medico', autorizarUsuarios([1]),
 
 /**
  * @swagger
- * /api/v1/turnos/paciente/{id_paciente}:
+ * /api/v1/turnosReservas/paciente/{id_paciente}:
  *   get:
  *     summary: Obtener turnos de un paciente específico
  *     tags: [Turnos]
@@ -116,7 +116,7 @@ router.get('/paciente/:id_paciente', autorizarUsuarios([2]),
 
 /**
  * @swagger
- * /api/v1/turnos:
+ * /api/v1/turnosReservas:
  *   post:
  *     summary: Crear un nuevo turno
  *     tags: [Turnos]
@@ -166,7 +166,7 @@ router.post('/', autorizarUsuarios([2,3]),
 
 /**
  * @swagger
- * /api/v1/turnos/{id_turno}/marcar-atendido:
+ * /api/v1/turnosReservas/{id_turno}/marcar-atendido:
  *   put:
  *     summary: Marcar un turno como atendido
  *     tags: [Turnos]
@@ -194,7 +194,7 @@ router.put('/:id_turno/marcar-atendido', autorizarUsuarios([1]),
 
 /**
  * @swagger
- * /api/v1/turnos/{id_turno}:
+ * /api/v1/turnosReservas/{id_turno}:
  *   delete:
  *     summary: Cancelar un turno (soft delete)
  *     tags: [Turnos]
