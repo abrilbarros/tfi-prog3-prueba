@@ -15,7 +15,7 @@ const transformarDTO = new TransformarDTO();
  * @swagger
  * /api/v1/usuarios/admins:
  *   get:
- *     summary: Listar todas las especialidades
+ *     summary: Listar todas los administradores
  *     tags: [Usuarios]
  *     responses:
  *       200:
@@ -23,17 +23,19 @@ const transformarDTO = new TransformarDTO();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 estado:
- *                   type: boolean
- *                   example: true
- *                 turnos:
- *                   type: array
- *                   items:
- *                   
+ *              $ref: '#/components/schemas/RespuestaListaAdmins'               
  *       404:
  *         description: No se encontraron Administradores
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorGenerico'
+ *       500:
+ *         description: Error interno
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorInterno'
  */
 router.get('/admins', autorizarUsuarios([3]), usuariosControlador.listarAdmins);
 
@@ -46,16 +48,28 @@ router.get('/admins', autorizarUsuarios([3]), usuariosControlador.listarAdmins);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         application/x-www-form-urlencoded:
  *           schema:
  *             $ref: '#/components/schemas/CrearUsuario'
  *     responses:
  *       201:
  *         description: Usuario creado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaCreacionUsuario'
  *       400:
- *         description: Error en los datos
+ *         description: Error de validación, el usuario ya existe
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorGenerico'
  *       500:
  *         description: Error interno
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorInterno'
  */
 router.post('/', autorizarUsuarios([3]),
     [
@@ -125,12 +139,61 @@ router.post('/', autorizarUsuarios([3]),
     usuariosControlador.crear
 );
 
+
+/**
+ * @swagger
+ * /api/v1/usuarios/{id_usuario}:
+ *   put:
+ *     summary: Modificar un usuario
+ *     tags: [Usuarios]
+ *     parameters:
+ *       - in: path
+ *         name: id_usuario
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: ID del usuario
+ *         example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             $ref: '#/components/schemas/ModificarUsuario'
+ *     responses:
+ *       200:
+ *         description: Usuario modificado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaModificacion'
+ *       400:
+ *         description: No se enviaron datos para actualizar
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorGenerico'
+ *       404:
+ *         description: Usuario Inexistente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorGenerico'
+ *       500:
+ *         description: Error interno
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorInterno'
+ */
 router.put('/:id_usuario', autorizarUsuarios([3]),
     [
         param('id_usuario').notEmpty().withMessage('El Id usuario es obligatorio.')
             .isInt().withMessage('El Id debe ser un numero entero'),
-        check('email').isEmail().withMessage('Email invalido!.')
-            .optional(),
+        check('email')
+            .optional({ checkFalsy: true })
+            .isEmail().withMessage('Email invalido!.'),
         check('descripcion').optional(),
         
         check('valor_consulta').optional(),
@@ -145,6 +208,41 @@ router.put('/:id_usuario', autorizarUsuarios([3]),
     usuariosControlador.modificar
 );
 
+/**
+ * @swagger
+ * /api/v1/usuarios/{id_usuario}:
+ *   delete:
+ *     summary: Eliminar (soft delete)
+ *     tags: [Usuarios]
+ *     parameters:
+ *       - in: path
+ *         name: id_usuario
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: ID del usuario
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Usuario eliminado con exito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaEliminacion'
+ *       404:
+ *         description: Usuario no encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorGenerico'
+ *       500:
+ *         description: Error interno
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorInterno'
+ */
 router.delete('/:id_usuario', autorizarUsuarios([3]),
     [
         param('id_usuario', 'El parámetro debe ser entero').isInt(),    

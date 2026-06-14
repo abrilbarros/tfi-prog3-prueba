@@ -17,3 +17,9 @@ export default class ModificarUsuarioDTO {
         };
     }
 }
+
+export const esDtoVacio = (dto) => {
+    // Obtenemos todos los valores del objeto y verificamos si todos son null
+    const valores = Object.values(dto);
+    return valores.every(valor => valor === null);
+};

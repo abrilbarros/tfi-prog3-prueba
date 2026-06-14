@@ -1,6 +1,6 @@
 import Usuarios from "../db/usuarios.js"
 import CrearUsuarioDTO from "../dtos/usuariosCrearDTO.js";
-import ModificarUsuarioDTO from "../dtos/usuariosModificarDTO.js";
+import ModificarUsuarioDTO, { esDtoVacio } from "../dtos/usuariosModificarDTO.js";
 import { pool } from "../db/conexion.js";
 
 export default class UsuariosServicios {
@@ -54,19 +54,20 @@ export default class UsuariosServicios {
 
     modificar = async (id_usuario, datos) => {
         
+        if (esDtoVacio(datos)) {
+            throw new Error("EMPTY_DATA")
+        };
+        
+        const existe = await this.usuarios.buscarPorId(id_usuario);
+        if(!existe) {
+            throw new Error("INEXISTENTE");
+        }
+        
         const conexion = await pool.getConnection();
-
         try {
-            
             await conexion.beginTransaction();
 
             const dto = new ModificarUsuarioDTO(datos);
-            
-            const usuario = await this.usuarios.buscarPorId(id_usuario);
-
-            if(!usuario) {
-                throw new Error("Usuario no encontrado");
-            }
 
             if(usuario.rol == 1) {
                 await this.usuarios.modificarMedico(id_usuario, dto.medico, conexion);
@@ -81,7 +82,7 @@ export default class UsuariosServicios {
             await conexion.commit();
             await conexion.release();
 
-            const usuarioModificado = this.usuarios.buscarPorId(id_usuario);
+            const usuarioModificado = await this.usuarios.buscarPorId(id_usuario);
 
             return usuarioModificado;
         } catch (error) {
@@ -94,12 +95,12 @@ export default class UsuariosServicios {
 
     eliminar = async (id_usuario) => {
         
-        const usuario = await this.usuarios.buscarPorId(id_usuario);
-
-            if(!usuario) {
-                throw new Error("Usuario no encontrado");
-            }
+        const existe = await this.usuarios.buscarPorId(id_usuario);
         
+        if(existe === undefined){
+            return null;
+        };
+
         return await this.usuarios.eliminar(id_usuario);
     }
 }

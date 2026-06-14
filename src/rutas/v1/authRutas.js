@@ -16,15 +16,15 @@ const authController = new AuthController();
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         application/x-www-form-urlencoded:
  *           schema:
  *             type: object
  *             required:
  *               - email
  *               - contrasenia
  *             properties:
- *               email: { type: string }
- *               contrasenia: { type: string, format: password }
+ *               email: { type: string, example: ferben@correo.com }
+ *               contrasenia: { type: string, format: password, example: ferben }
  *     responses:
  *       200:
  *         description: Usuario Logueado correctamente
@@ -33,17 +33,30 @@ const authController = new AuthController();
  *             schema:
  *               type: object
  *               properties:
- *                 token: { type: string }
+ *                 estado:
+ *                   type: boolean
+ *                   example: true
+ *                 token:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *       400:
- *         description: Error en los datos
+ *         description: Solicitud incorrecta
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorGenerico'
  *       500:
  *         description: Error interno
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorInterno'
  */
 router.post('/login',
     [
         check('email')
             .notEmpty().withMessage('El correo electronico es requerido!.')
-            .isEmail().withMessage('Revisar el formato dle correo electrónico'),
+            .isEmail().withMessage('Revisar el formato de correo electrónico'),
         check('contrasenia')
             .notEmpty().withMessage('La constraseña es requerida!.'),
         validarCampos
