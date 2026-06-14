@@ -153,7 +153,7 @@ router.get('/paciente/:id_paciente', autorizarUsuarios([2]),
  *       500:
  *         description: Error interno
  */
-router.post('/', autorizarUsuarios([2,3]),
+router.post('/', autorizarUsuarios([3]),
     [
         check('id_medico', 'El ID del médico es obligatorio').isInt(),
         check('id_paciente', 'El ID del paciente es obligatorio').isInt(),

@@ -88,7 +88,7 @@ export default class TransformarDTO {
             nombres : nombres.trim(),
             email : email.trim().toLowerCase(),
             contrasenia : crypto.createHash('sha256').update(contrasenia).digest('hex'),
-            rol : rol,
+            rol : parseInt(rol),
 
             //Datos de medico
             id_especialidad : id_especialidad ? parseInt(id_especialidad) : null,

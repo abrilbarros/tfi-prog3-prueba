@@ -124,27 +124,111 @@ const options = {
                         promedio: { type: 'number', example: 9000.00 }
                     }
                 },
+
+                //SCHEMAS PARA USUARIOS//
                 CrearUsuario: {
                     type: 'object',
-                    // Todos los campos obligatorios aquí:
                     required: ['documento', 'apellido', 'nombres', 'email', 'contrasenia', 'rol'],
                     properties: {
-                        // Obligatorios
                         documento: { type: 'string', example: '12345678' },
                         apellido: { type: 'string', example: 'Perez' },
                         nombres: { type: 'string', example: 'Juan' },
                         email: { type: 'string', example: 'juan.perez@ejemplo.com' },
                         contrasenia: { type: 'string', format: 'password', example: 'Password123' },
-                        rol: { type: 'string', enum: ['admin', 'medico', 'paciente'], example: 'paciente' },
-
-                        // Opcionales (no están en el array 'required')
-                        id_especialidad: { type: 'integer', example: 5 },
-                        matricula: { type: 'string', example: 'MAT-98765' },
-                        descripcion: { type: 'string', example: 'Especialista en traumatología' },
-                        valor_consulta: { type: 'number', example: 5000.50 },
-                        id_obra_social: { type: 'integer', example: 2 }
+                        rol: { type: 'integer', enum: [1, 2, 3], example: 1, description: '1(Medico) | 2(Paciente) | 3(Admin)' },
+                        //Datos medicos
+                        id_especialidad: { type: 'integer', example: 1, description: 'Obligatorio si el rol es 1(Medico). Enviar vacio para otros' },
+                        matricula: { type: 'integer', example: 1234, description: 'Obligatorio si el rol es 1(Medico). Enviar vacio para otros' },
+                        descripcion: { type: 'string', example: "Especialista en Cardiologia", description: 'Obligatorio si el rol es 1(Medico). Enviar vacio para otros' },
+                        valor_consulta: { type: 'integer', example: 8000, description: 'Obligatorio si el rol es 1(Medico). Enviar vacio para otros' },
+                        //Datos pacientes
+                        id_obra_social: { type: 'integer', example: 1, description: 'Obligatorio si el rol es 2(Paciente). Enviar vacio para otros' }
+                    }
+                },
+                ModificarUsuario: {
+                    type: 'object',
+                    properties: {
+                        email: { type: 'string', example: 'juan.perez@ejemplo.com' },
+                        //Datos medicos
+                        id_especialidad: { type: 'integer', example: 1 },
+                        descripcion: { type: 'string', example: "Especialista en Cardiologia" },
+                        valor_consulta: { type: 'integer', example: 8000 },
+                        //Datos pacientes
+                        id_obra_social: { type: 'integer', example: 1 }
+                    }
+                },
+                RespuestaListaAdmins: {
+                    type: 'object',
+                    properties: {
+                        estado: { type: 'boolean', example: true },
+                        datos: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    id_usuario: { type: 'integer', example: 8 },
+                                    documento: { type: 'string', example: '51000111' },
+                                    apellido: { type: 'string', example: 'Fernandez' },
+                                    nombres: { type: 'string', example: 'Benito' },
+                                    email: { type: 'string', example: 'ferben@correo.com' }
+                                }
+                            }
+                        }
+                    }
+                },
+                RespuestaCreacionUsuario: {
+                    type: 'object',
+                    properties: {
+                        estado: { type: 'boolean', example: true },
+                        mensaje: { type: 'string', example: 'Usuario creado con el ID 63.' },
+                        datos: { type: 'integer', example: 63 }
+                    }
+                },
+                RespuestaModificacion: {
+                    type: 'object',
+                    properties: {
+                        estado: { type: 'boolean', example: true },
+                        mensaje: { type: 'string', example: 'Usuario modificado con exito.' },
+                        datos: {
+                            type: 'object',
+                            properties: {
+                                id_usuario: { type: 'integer', example: 1 },
+                                documento: { type: 'string', example: '31000111' },
+                                apellido: { type: 'string', example: 'Lopez' },
+                                nombres: { type: 'string', example: 'Marcelo' },
+                                email: { type: 'string', example: 'lopmar@correo.com' },
+                                contrasenia: { type: 'string', example: '2a2646782c5...' },
+                                foto_path: { type: 'string', example: '' },
+                                rol: { type: 'integer', example: 1 },
+                                activo: { type: 'integer', example: 1 }
+                            }
+                        }
+                    }
+                },
+                RespuestaEliminacion: {
+                    type: 'object',
+                    properties: {
+                        estado: { type: 'boolean', example: true },
+                        mensaje: { type: 'string', example: 'Usuario con ID 10 eliminado con exito.' }
+                    }
+                },
+                //Schema para errores del tipo 400
+                RespuestaErrorGenerico: {
+                    type: 'object',
+                    properties: {
+                        estado: { type: 'boolean', example: false },
+                        mensaje: { type: 'string', example: 'Error genérico.' }
+                    }
+                },
+                //Schema para errores del tipo 500
+                RespuestaErrorInterno: {
+                    type: 'object',
+                    properties: {
+                        estado: { type: 'boolean', example: false },
+                        mensaje: { type: 'string', example: 'Error interno.' }
                     }
                 }
+
             }
         },
         security: [
