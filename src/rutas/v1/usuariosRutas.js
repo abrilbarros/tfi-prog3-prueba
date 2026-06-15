@@ -4,6 +4,7 @@ import { validarCampos } from '../../middlewares/validarCampos.js';
 import UsuariosControlador from '../../controladores/usuariosControlador.js';
 import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
 import TransformarDTO from '../../middlewares/transformarDTOs.js';
+import passport from 'passport';
 
 
 const router = express.Router();
@@ -95,7 +96,7 @@ router.post('/', autorizarUsuarios([3]),
 
         check('id_especialidad')
             .if((value, { req }) => req.body.rol === 1)
-            .isInt( { min: 1 }).withMessage('El ID de especialidad debe ser un número entero valido.')
+            .isInt({ min: 1 }).withMessage('El ID de especialidad debe ser un número entero valido.')
             .notEmpty().withMessage("La especialidad es obligatoria para medicos."),
 
         check('matricula')
@@ -109,12 +110,12 @@ router.post('/', autorizarUsuarios([3]),
 
         check('valor_consulta')
             .if((value, { req }) => req.body.rol === 1)
-            .isInt( { min: 0 }).withMessage('El valor de la consulta debe ser un número entero (0 o mayor).')
+            .isInt({ min: 0 }).withMessage('El valor de la consulta debe ser un número entero (0 o mayor).')
             .notEmpty().withMessage("El valor de la consulta es obligatoria para medicos."),
 
         check('id_obra_social')
             .if((value, { req }) => req.body.rol === 2)
-            .isInt( { min: 0 }).withMessage('El ID de obra social debe ser un número entero (1 para Particular).')
+            .isInt({ min: 0 }).withMessage('El ID de obra social debe ser un número entero (1 para Particular).')
             .notEmpty().withMessage("El ID de obra social es obligatoria para pacientes."),
 
         check('id_especialidad')
@@ -138,6 +139,62 @@ router.post('/', autorizarUsuarios([3]),
     transformarDTO.usuariosCrearDTO,
     usuariosControlador.crear
 );
+
+/**
+ * @swagger
+ * /api/v1/usuarios/nuevaContrasenia:
+ *   put:
+ *     summary: Cambiar Contraseña
+ *     tags: [Usuarios]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             $ref: '#/components/schemas/CambiarContrasenia'
+ *     responses:
+ *       200:
+ *         description: Contraseña modificada con exito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaCambioContrasenia'
+ *       400:
+ *         description: Las nuevas contraseñas no coinciden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorGenerico'
+ *       401:
+ *         description: Contraseña actual incorrecta
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorGenerico'
+ *       404:
+ *         description: El usuario no existe
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorGenerico'
+ *       500:
+ *         description: Error interno
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RespuestaErrorInterno'
+ */
+router.put('/nuevaContrasenia', autorizarUsuarios([1, 2, 3]), passport.authenticate('jwt', { session: false }),
+    [
+        check('contraseniaActual').notEmpty().withMessage('La Contraseña no puede estar vacia'),
+        check('nuevaContrasenia').notEmpty().withMessage('Debe ingresar una nueva contraseña'),
+        check('repetirContrasenia').notEmpty().withMessage('Debe repetir la nueva contraseña'),
+        validarCampos
+    ],
+    transformarDTO.CambiarContraseniaDTO,
+    usuariosControlador.cambiarContrasenia
+)
+
 
 
 /**
@@ -195,18 +252,19 @@ router.put('/:id_usuario', autorizarUsuarios([3]),
             .optional({ checkFalsy: true })
             .isEmail().withMessage('Email invalido!.'),
         check('descripcion').optional(),
-        
+
         check('valor_consulta').optional(),
 
         check('id_especialidad').optional(),
-        
+
         check('id_obra_social').optional(),
-        
+
         validarCampos
     ],
     transformarDTO.usuariosModificarDTO,
     usuariosControlador.modificar
 );
+
 
 /**
  * @swagger
@@ -245,7 +303,7 @@ router.put('/:id_usuario', autorizarUsuarios([3]),
  */
 router.delete('/:id_usuario', autorizarUsuarios([3]),
     [
-        param('id_usuario', 'El parámetro debe ser entero').isInt(),    
+        param('id_usuario', 'El parámetro debe ser entero').isInt(),
         validarCampos
     ],
     usuariosControlador.eliminar

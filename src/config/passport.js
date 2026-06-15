@@ -3,8 +3,6 @@ import { Strategy as LocalStrategy } from 'passport-local';
 
 import UsuariosServicios from '../servicios/usuariosServicios.js';
 
-console.log(process.env.JWT_SECRET);
-
 const estrategia = new LocalStrategy( {
     usernameField: 'email',
     passwordField: 'contrasenia'
