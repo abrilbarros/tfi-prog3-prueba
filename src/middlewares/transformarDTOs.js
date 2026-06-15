@@ -118,5 +118,17 @@ export default class TransformarDTO {
         }
 
         next()
+    };
+
+    CambiarContraseniaDTO = async(req, res, next) => {
+        const { contraseniaActual, nuevaContrasenia, repetirContrasenia} = req.body;
+
+        req.dto = {
+            contraseniaActual : contraseniaActual.trim(),
+            nuevaContrasenia : nuevaContrasenia.trim(),
+            repetirContrasenia : repetirContrasenia.trim()
+        }
+
+        next()
     }
 }

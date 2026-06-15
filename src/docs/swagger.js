@@ -184,6 +184,14 @@ const options = {
                         datos: { type: 'integer', example: 63 }
                     }
                 },
+                RespuestaCambioContrasenia: {
+                    type: 'object',
+                    properties: {
+                        estado: { type: 'boolean', example: true },
+                        mensaje: { type: 'string', example: 'Contraseña modificada con exito.' },
+                        datos: { type: 'integer', example: 10 }
+                    }
+                },
                 RespuestaModificacion: {
                     type: 'object',
                     properties: {
@@ -227,7 +235,28 @@ const options = {
                         estado: { type: 'boolean', example: false },
                         mensaje: { type: 'string', example: 'Error interno.' }
                     }
-                }
+                },
+
+                CambiarContrasenia: {
+                    type: 'object',
+                    required: ['contraseniaActual', 'nuevaContrasenia', 'repetirContrasenia'],
+                    properties: {
+                        contraseniaActual: { type: 'string', format: 'password'},
+                        nuevaContrasenia: { type: 'string', format: 'password'},
+                        repetirContrasenia: { type: 'string', format: 'password'}
+                    }
+                },
+
+                ReiniciarContrasenia: {
+                    type: 'object',
+                    required: ['token', 'documento', 'nuevaContrasenia', 'repetirContrasenia'],
+                    properties: {
+                        token: { type: 'string', format: 'token'},
+                        documento: { type: 'integer'},
+                        nuevaContrasenia: { type: 'string', format: 'password'},
+                        repetirContrasenia: { type: 'string', format: 'password'}
+                    }
+                },
 
             }
         },

@@ -90,6 +90,12 @@ export default class Usuarios {
         return result[0];
     }
 
+    buscarPorEmail = async (email) => {
+        const sql = `SELECT u.id_usuario, u.documento FROM usuarios AS u WHERE u.email = ?`
+        const [results] = await pool.execute(sql, [email]);
+        return results[0];
+    }
+
     modificarUsuario = async (id_usuario, datosUsuario, conexion) => {
         const updates  = [];
         const values = [];
@@ -169,6 +175,15 @@ export default class Usuarios {
     eliminar  = async(id_usuario) => {
         const sql = 'UPDATE usuarios SET activo = 0 WHERE id_usuario = ?';
         const [result] = await pool.execute(sql, [id_usuario]);
+        if (result.affectedRows === 0){
+            return null;
+        }
+        return id_usuario;
+    }
+
+    cambiarContrasenia = async (id_usuario, contrasenia) => {
+        const sql = `UPDATE usuarios SET contrasenia = ? WHERE id_usuario = ?`;
+        const [result] = await pool.execute(sql, [contrasenia, id_usuario]);
         if (result.affectedRows === 0){
             return null;
         }

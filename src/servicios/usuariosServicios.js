@@ -2,7 +2,7 @@ import Usuarios from "../db/usuarios.js"
 import CrearUsuarioDTO from "../dtos/usuariosCrearDTO.js";
 import ModificarUsuarioDTO, { esDtoVacio } from "../dtos/usuariosModificarDTO.js";
 import { pool } from "../db/conexion.js";
-
+import crypto from 'crypto'
 export default class UsuariosServicios {
     constructor() {
         this.usuarios = new Usuarios();
@@ -12,12 +12,16 @@ export default class UsuariosServicios {
         return await this.usuarios.listarAdmins();
     }
 
-    buscarPorId = (id_usuario) => {
-    return this.usuarios.buscarPorId(id_usuario);
+    buscarPorId = async (id_usuario) => {
+        return await this.usuarios.buscarPorId(id_usuario);
     }
     
-    buscar = (email, contrasenia) => {
-        return this.usuarios.buscar(email, contrasenia);
+    buscar = async (email, contrasenia) => {
+        return await this.usuarios.buscar(email, contrasenia);
+    }
+
+    buscarPorEmail = async (email) => {
+        return await this.usuarios.buscarPorEmail(email);
     }
 
     crear = async (nuevoUsuario) => {
@@ -58,8 +62,8 @@ export default class UsuariosServicios {
             throw new Error("EMPTY_DATA")
         };
         
-        const existe = await this.usuarios.buscarPorId(id_usuario);
-        if(!existe) {
+        const usuario = await this.usuarios.buscarPorId(id_usuario);
+        if(!usuario) {
             throw new Error("INEXISTENTE");
         }
         
@@ -91,6 +95,35 @@ export default class UsuariosServicios {
             await conexion.release();
             throw error;
         }
+    }
+
+    cambiarContrasenia = async (id_usuario, data) => {
+        
+        const usuario = await this.usuarios.buscarPorId(id_usuario);
+        if(!usuario) throw new Error("NO_EXISTE");
+
+        const contraseniaHashActual = crypto.createHash('sha256').update(data.contraseniaActual).digest('hex');
+
+        if(usuario.contrasenia !== contraseniaHashActual) {
+            throw new Error("CONT_INCORRECTA");
+        }
+        if(data.nuevaContrasenia !== data.repetirContrasenia){
+            throw new Error("NO_COINCIDEN");
+        }
+
+        const nuevaContraseniaHash = crypto.createHash('sha256').update(data.nuevaContrasenia).digest('hex');
+
+        return await this.usuarios.cambiarContrasenia(id_usuario, nuevaContraseniaHash)
+    }
+
+    reinicioContrasenia = async (id_usuario, contrasenia) => {
+
+        const usuario = await this.usuarios.buscarPorId(id_usuario);
+        if(!usuario) throw new Error("NO_EXISTE");
+
+        const contraseniaHasheada = crypto.createHash('sha256').update(contrasenia).digest('hex');
+
+        return await this.usuarios.cambiarContrasenia(id_usuario, contraseniaHasheada)
     }
 
     eliminar = async (id_usuario) => {
