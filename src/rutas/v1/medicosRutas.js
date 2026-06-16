@@ -108,6 +108,10 @@ router.get('/:id_medico', autorizarUsuarios([2,3]),
  *         description: Medico y obras sociales relacionadas
  *       400:
  *         description: Error en los datos o no se crearon las relaciones
+ *       404:
+ *         description: Medico u obra social no encontrada
+ *       409:
+ *         description: Las relaciones ya existian
  *       500:
  *         description: Error interno
  */

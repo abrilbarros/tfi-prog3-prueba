@@ -26,13 +26,13 @@ export default class TransformarDTO {
     }
 
     obrasSocialesCrearDTO = async (req, res, next) => {
-        const { nombre, descripcion, porcentaje_descuento, es_particular } = req.body;
+        const { nombre, descripcion, porcentaje_descuento } = req.body;
 
         req.dto = {
             nombre: nombre.trim().toUpperCase(),
             descripcion: descripcion.trim(),
             porcentaje_descuento,
-            es_particular
+            es_particular: 0
         };
 
         next();
@@ -40,7 +40,7 @@ export default class TransformarDTO {
 
     obrasSocialesActualizarDTO = async (req, res, next) => {
         const { id_obra_social } = req.params;
-        const { nombre, descripcion, porcentaje_descuento, es_particular } = req.body;
+        const { nombre, descripcion, porcentaje_descuento } = req.body;
 
         const dto = {
             id_obra_social: parseInt(id_obra_social)
@@ -56,10 +56,6 @@ export default class TransformarDTO {
             dto.porcentaje_descuento = porcentaje_descuento;
         }
 
-        if (es_particular !== undefined) {
-            dto.es_particular = es_particular;
-        }
-
         req.dto = dto;
 
         next();
@@ -68,12 +64,26 @@ export default class TransformarDTO {
     medicosAsociarDTO = async (req, res, next) => {
         const { id_medico } = req.params;
         const { obras_sociales } = req.body;
+        const idsVistos = new Set();
+        const obrasSocialesSinRepetir = [];
+        const obrasSocialesRepetidas = [];
+
+        for (const obra_social of obras_sociales) {
+            const idObraSocial = Number(obra_social.id_obra_social);
+
+            if (idsVistos.has(idObraSocial)) {
+                obrasSocialesRepetidas.push(idObraSocial);
+                continue;
+            }
+
+            idsVistos.add(idObraSocial);
+            obrasSocialesSinRepetir.push({ id_obra_social: idObraSocial });
+        }
 
         req.dto = {
             id_medico: Number(id_medico),
-            obras_sociales: obras_sociales.map(obra_social => ({
-                id_obra_social: Number(obra_social.id_obra_social)
-            }))
+            obras_sociales: obrasSocialesSinRepetir,
+            obras_sociales_repetidas: obrasSocialesRepetidas
         };
 
         next();

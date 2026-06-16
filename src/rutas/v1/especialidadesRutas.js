@@ -38,16 +38,7 @@ const transformarDTO = new TransformarDTO();
  *       404:
  *         description: No se encontraron Especialidades
  */
-router.get('/', autorizarUsuarios([2,3]),
-    (req, res, next) => {
-        // Esto te mostrará quién está intentando entrar y qué rol tiene
-        console.log("--- DEBUG RUTA TURNOS ---");
-        console.log("Usuario en req:", req.user);
-        console.log("Rol del usuario:", req.user?.rol);
-        console.log("Tipo de dato del rol:", typeof req.user?.rol);
-        next(); // ¡IMPORTANTE! Esto le dice a Express que continúe al siguiente middleware
-    },
-    cache('2 minutes'), especialidadesControlador.buscarTodas);
+router.get('/', autorizarUsuarios([2,3]), cache('2 minutes'), especialidadesControlador.buscarTodas);
 
 /**
  * @swagger
@@ -71,6 +62,8 @@ router.get('/', autorizarUsuarios([2,3]),
  *         description: ID invalido
  *       404:
  *         description: Especialidad no encontrada
+ *       500:
+ *         description: Error interno
  */
 router.get('/:id_especialidad', autorizarUsuarios([2,3]),
     [
@@ -88,7 +81,7 @@ router.get('/:id_especialidad', autorizarUsuarios([2,3]),
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         application/x-www-form-urlencoded:
  *           schema:
  *             type: object
  *             required:
@@ -136,7 +129,7 @@ router.post('/',autorizarUsuarios([3]),
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         application/x-www-form-urlencoded:
  *           schema:
  *             type: object
  *             properties:

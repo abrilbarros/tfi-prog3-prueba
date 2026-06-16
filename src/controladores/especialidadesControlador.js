@@ -5,7 +5,6 @@ export default class EspecialidadesControlador {
         this.especialidades = new EspecialidadesServicio();
     }
 
-    // Obtener todas las especialidades
     buscarTodas = async (req, res) => {
         try {
             const especialidades = await this.especialidades.buscarTodas();
@@ -32,12 +31,10 @@ export default class EspecialidadesControlador {
         }
     }
 
-    // Obtener especialidad por ID
     buscarPorId = async (req, res) => {
         try {
             const id_especialidad = req.params.id_especialidad;
 
-            // Verifica si la especialidad existe
             const especialidad = await this.especialidades.buscarPorId(id_especialidad);
 
             if (!especialidad) {
@@ -62,7 +59,6 @@ export default class EspecialidadesControlador {
         }
     }
 
-    // Crear una nueva especialidad
     crear = async (req, res) => {
         try {
             const especialidad = req.dto;
@@ -92,7 +88,6 @@ export default class EspecialidadesControlador {
         }
     }
 
-    // Modificar una especialidad existente
     modificar = async (req, res) => {
         try {
             const id_especialidad = req.params.id_especialidad;
@@ -140,15 +135,12 @@ export default class EspecialidadesControlador {
         }
     }
 
-    // Eliminar una especialidad (baja lógica)
     eliminar = async (req, res) => {
         try {
             const id_especialidad = req.params.id_especialidad;
 
-            // Buscar especialidad en la base de datos
             const especialidad = await this.especialidades.buscarPorId(id_especialidad);
 
-            // Verifica si la especialidad existe
             if (!especialidad) {
                 return res.status(404).json({
                     estado: false,
@@ -156,10 +148,8 @@ export default class EspecialidadesControlador {
                 });
             }
 
-            // Eliminar especialidad de la base de datos
             await this.especialidades.eliminar(id_especialidad);
 
-            // Devuelve mensaje indicando que la especialidad fue eliminada
             return res.status(200).json({
                 estado: true,
                 mensaje: "Especialidad eliminada.",

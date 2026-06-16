@@ -64,17 +64,36 @@ export default class MedicosControlador {
     // Asociar médico con obras sociales
     asociarMedicoObrasSociales = async (req, res) => {
         try {
-            const { id_medico, obras_sociales } = req.dto;
+            const { id_medico, obras_sociales, obras_sociales_repetidas } = req.dto;
 
             const relacion = await this.medicos.asociarMedicoObrasSociales(
                 id_medico,
-                obras_sociales
+                obras_sociales,
+                obras_sociales_repetidas
             );
 
-            if (!relacion) {
-                return res.status(400).json({
+            if (relacion.error === "MEDICO_NO_ENCONTRADO") {
+                return res.status(404).json({
                     estado: false,
-                    mensaje: "No se crearon las relaciones."
+                    mensaje: "Médico no encontrado."
+                });
+            }
+
+            if (relacion.error === "OBRAS_SOCIALES_NO_ENCONTRADAS") {
+                return res.status(404).json({
+                    estado: false,
+                    mensaje: "Una o más obras sociales no existen o no están activas.",
+                    datos: {
+                        obras_sociales_no_encontradas: relacion.obras_sociales_no_encontradas
+                    }
+                });
+            }
+
+            if (relacion.obras_sociales_creadas.length === 0) {
+                return res.status(409).json({
+                    estado: false,
+                    mensaje: "Las relaciones ya existían.",
+                    datos: relacion
                 });
             }
 
