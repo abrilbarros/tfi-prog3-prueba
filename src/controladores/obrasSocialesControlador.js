@@ -97,7 +97,14 @@ export default class ObrasSocialesControlador {
             const idObraSocial = req.params.id_obra_social;
             const obraSocial = req.dto;
 
-            if (Object.keys(obraSocial).length === 0) {
+            if(Number(idObraSocial) === 1){
+                return res.status(403).json({
+                    estado: false,
+                    mensaje: 'La primera obra social no se puede modificar.'
+                });
+            }
+
+            if (Object.keys(obraSocial).length === 1) {
                 return res.status(400).json({
                     estado: false,
                     mensaje: 'No se recibieron los datos de la Obra Social para modificar.'
@@ -141,16 +148,32 @@ export default class ObrasSocialesControlador {
     eliminar = async(req, res) => {
         try{
             const idObraSocial = req.params.id_obra_social;
-            const obraSocial = await this.obrasSociales.eliminar(idObraSocial);
+
+            if(Number(idObraSocial) === 1){
+                return res.status(403).json({
+                    estado: false,
+                    mensaje: 'La primera obra social no se puede eliminar.'
+                });
+            }
+
+            const obraSocial = await this.obrasSociales.buscarPorId(idObraSocial);
             
-            if(obraSocial === null){
+            if(obraSocial.length === 0){
                 return res.status(404).json({
                     estado: false, 
                     mensaje: 'Obra Social no encontrada.'
                 });
             }
-            //solo se indica que la operación fue exitosa (204 No Content, la respuesta no tiene cuerpo)
-            return res.status(204).send();
+            await this.obrasSociales.eliminar(idObraSocial);
+
+            return res.status(200).json({
+                estado: true,
+                mensaje: 'Obra Social eliminada.',
+                obra_social: {
+                    id_obra_social: obraSocial[0].id_obra_social,
+                    obra_social: obraSocial[0].nombre
+                }
+            });
 
         }catch(error){
             console.log(`Error en DELETE /obras-sociales/:id_obra_social ${error}`);

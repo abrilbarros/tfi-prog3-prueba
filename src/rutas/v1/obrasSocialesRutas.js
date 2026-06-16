@@ -83,14 +83,13 @@ router.get('/:id_obra_social', autorizarUsuarios([3]), cache('2 minutes'),
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         application/x-www-form-urlencoded:
  *           schema:
  *             type: object
  *             required:
  *               - nombre
  *               - descripcion
  *               - porcentaje_descuento
- *               - es_particular
  *             properties:
  *               nombre:
  *                 type: string
@@ -101,9 +100,6 @@ router.get('/:id_obra_social', autorizarUsuarios([3]), cache('2 minutes'),
  *               porcentaje_descuento:
  *                 type: number
  *                 example: 40
- *               es_particular:
- *                 type: boolean
- *                 example: false
  *     responses:
  *       201:
  *         description: Obra Social creada
@@ -126,8 +122,6 @@ router.post('/', autorizarUsuarios([3]),
             .isLength({ max: 120 }).withMessage('La descripción no debe ser mayor a 120 caracteres.'),
         check('porcentaje_descuento')
             .notEmpty().withMessage('El porcentaje_descuento es obligatorio.'),
-        check('es_particular')
-            .notEmpty().withMessage('El es_particular es obligatorio.'),
         validarCampos
     ],
     transformarDTO.obrasSocialesCrearDTO,
@@ -151,7 +145,7 @@ router.post('/', autorizarUsuarios([3]),
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         application/x-www-form-urlencoded:
  *           schema:
  *             type: object
  *             properties:
@@ -164,14 +158,13 @@ router.post('/', autorizarUsuarios([3]),
  *               porcentaje_descuento:
  *                 type: number
  *                 example: 45
- *               es_particular:
- *                 type: boolean
- *                 example: false
  *     responses:
  *       200:
  *         description: Obra Social modificada
  *       400:
  *         description: ID invalido o error en los datos
+ *       403:
+ *         description: La primera obra social no se puede modificar
  *       404:
  *         description: Obra Social no encontrada
  *       409:
@@ -195,9 +188,6 @@ router.put('/:id_obra_social', autorizarUsuarios([3]),
         check('porcentaje_descuento')
             .optional()
             .isNumeric().withMessage('El porcentaje_descuento debe ser numérico.'),
-        check('es_particular')
-            .optional()
-            .isBoolean().withMessage('es_particular debe ser verdadero o falso.'),
         validarCampos
     ],
     transformarDTO.obrasSocialesActualizarDTO,
@@ -219,10 +209,12 @@ router.put('/:id_obra_social', autorizarUsuarios([3]),
  *         description: ID de la obra social
  *         example: 1
  *     responses:
- *       204:
+ *       200:
  *         description: Obra Social eliminada correctamente
  *       400:
  *         description: ID invalido
+ *       403:
+ *         description: La primera obra social no se puede eliminar
  *       404:
  *         description: Obra Social no encontrada
  *       500:
