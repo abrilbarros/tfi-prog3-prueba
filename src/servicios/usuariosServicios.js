@@ -46,7 +46,7 @@ export default class UsuariosServicios {
 
             await conexion.commit();
             await conexion.release();
-
+            
             return idUsuario;
         }catch(error) {
             console.log(error)
@@ -63,7 +63,7 @@ export default class UsuariosServicios {
         };
         
         const usuario = await this.usuarios.buscarPorId(id_usuario);
-        if(!usuario) {
+        if(!usuario || usuario.activo === 0) {
             throw new Error("INEXISTENTE");
         }
         

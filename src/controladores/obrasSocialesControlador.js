@@ -97,7 +97,7 @@ export default class ObrasSocialesControlador {
             const idObraSocial = req.params.id_obra_social;
             const obraSocial = req.dto;
 
-            if(Number(idObraSocial) === 1){
+            if(idObraSocial === "1"){
                 return res.status(403).json({
                     estado: false,
                     mensaje: 'La primera obra social no se puede modificar.'
@@ -149,7 +149,7 @@ export default class ObrasSocialesControlador {
         try{
             const idObraSocial = req.params.id_obra_social;
 
-            if(Number(idObraSocial) === 1){
+            if(idObraSocial === "1"){
                 return res.status(403).json({
                     estado: false,
                     mensaje: 'La primera obra social no se puede eliminar.'
