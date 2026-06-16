@@ -76,9 +76,7 @@ const options = {
                         id_obra_social: { type: 'integer', example: 2 },
                         nombre: { type: 'string', example: 'OSUNER' },
                         descripcion: { type: 'string', example: 'Obra social de la universidad' },
-                        porcentaje_descuento: { type: 'number', example: 40.00 },
-                        es_particular: { type: 'boolean', example: false },
-                        activo: { type: 'integer', example: 1 }
+                        porcentaje_descuento: { type: 'number', example: 40.00 }
                     }
                 },
                 Paciente: {

@@ -18,7 +18,7 @@ export default class EspecialidadesControlador {
 
             res.status(200).json({
                 estado: true,
-                especialidades: especialidades
+                datos: especialidades
             });
 
         } catch (error) {
@@ -46,7 +46,7 @@ export default class EspecialidadesControlador {
 
             res.status(200).json({
                 estado: true,
-                especialidad: especialidad
+                datos: especialidad
             });
 
         } catch (error) {
@@ -68,7 +68,7 @@ export default class EspecialidadesControlador {
             res.status(201).json({
                 estado: true,
                 mensaje: "Especialidad creada correctamente.",
-                especialidad: nuevaEspecialidad
+                datos: nuevaEspecialidad
             });
 
         } catch (error) {
@@ -115,7 +115,7 @@ export default class EspecialidadesControlador {
             res.status(200).json({
                 estado: true,
                 mensaje: "Especialidad modificada.",
-                especialidad: especialidadModificada
+                datos: especialidadModificada
             });
 
         } catch (error) {
@@ -153,7 +153,7 @@ export default class EspecialidadesControlador {
             return res.status(200).json({
                 estado: true,
                 mensaje: "Especialidad eliminada.",
-                especialidad: {
+                datos: {
                     id_especialidad: especialidad.id_especialidad,
                     especialidad: especialidad.nombre
                 }
