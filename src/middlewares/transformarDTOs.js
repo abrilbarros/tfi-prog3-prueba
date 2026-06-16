@@ -1,9 +1,12 @@
 import crypto from 'crypto'
-import EspecialidadesCrearDTO from '../dtos/especialidadesCrearDTO.js';
 
 export default class TransformarDTO {
     especialidadesCrearDTO = async (req, res, next) => {
-        req.dto = new EspecialidadesCrearDTO(req.body);
+        const { nombre } = req.body;
+
+        req.dto = {
+            nombre: nombre.trim().toUpperCase()
+        };
 
         next();
     }
