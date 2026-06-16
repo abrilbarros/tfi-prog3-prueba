@@ -10,11 +10,9 @@ export default class Medicos {
 
     buscarPorId = async (id_medico) => {
         const sql = `
-            SELECT medicos.*
-            FROM medicos
-            INNER JOIN usuarios ON medicos.id_usuario = usuarios.id_usuario
-            WHERE usuarios.activo = 1
-            AND medicos.id_medico = ?
+            SELECT *
+            FROM v_medicos
+            WHERE id_medico = ?
         `;
         const [medico] = await pool.execute(sql, [id_medico]);
         if (medico.length === 0) {
@@ -90,6 +88,7 @@ export default class Medicos {
                 FROM medicos_obras_sociales
                 WHERE id_medico = ?
                 AND id_obra_social = ?
+                AND activo = 1
             `;
 
                 const [existe] = await conexion.execute(

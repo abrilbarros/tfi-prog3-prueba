@@ -31,7 +31,7 @@ const transformarDTO = new TransformarDTO();
  *                 estado:
  *                   type: boolean
  *                   example: true
- *                 especialidades:
+ *                 datos:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Especialidad'

@@ -10,11 +10,9 @@ export default class Pacientes {
 
     buscarPorId = async (id_paciente) => {
         const sql = `
-            SELECT pacientes.*
-            FROM pacientes
-            INNER JOIN usuarios ON pacientes.id_usuario = usuarios.id_usuario
-            WHERE usuarios.activo = 1
-            AND pacientes.id_paciente = ?
+            SELECT *
+            FROM v_pacientes
+            WHERE id_paciente = ?
         `;
 
         const [paciente] = await pool.execute(sql, [id_paciente]);

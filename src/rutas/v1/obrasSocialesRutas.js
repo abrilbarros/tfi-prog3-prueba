@@ -55,7 +55,7 @@ router.get('/', autorizarUsuarios([3]), cache('2 minutes'), obrasSocialesControl
  *           type: integer
  *           minimum: 1
  *         description: ID de la obra social
- *         example: 1
+ *         example: 2
  *     responses:
  *       200:
  *         description: Obra Social encontrada
@@ -93,13 +93,13 @@ router.get('/:id_obra_social', autorizarUsuarios([3]), cache('2 minutes'),
  *             properties:
  *               nombre:
  *                 type: string
- *                 example: "PAMI"
+ *                 example: "IOSFA"
  *               descripcion:
  *                 type: string
- *                 example: "jubilados/pensionados"
+ *                 example: "Cobertura para fuerzas armadas y de seguridad"
  *               porcentaje_descuento:
  *                 type: number
- *                 example: 40
+ *                 example: 30
  *     responses:
  *       201:
  *         description: Obra Social creada
@@ -141,7 +141,7 @@ router.post('/', autorizarUsuarios([3]),
  *           type: integer
  *           minimum: 1
  *         description: ID de la obra social
- *         example: 1
+ *         example: 2
  *     requestBody:
  *       required: true
  *       content:
@@ -207,7 +207,7 @@ router.put('/:id_obra_social', autorizarUsuarios([3]),
  *           type: integer
  *           minimum: 1
  *         description: ID de la obra social
- *         example: 1
+ *         example: 2
  *     responses:
  *       200:
  *         description: Obra Social eliminada correctamente
