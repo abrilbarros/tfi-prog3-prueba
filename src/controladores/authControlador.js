@@ -13,7 +13,7 @@ export default class AuthController {
                 return res.status(400).json({
                     estado: false,
                     mensaje: "Solicitud incorrecta."
-                })
+                })  
             }
             req.login(usuario, { session: false }, (err) => {
                 if (err) {
